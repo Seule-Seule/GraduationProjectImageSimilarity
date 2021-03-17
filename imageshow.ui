@@ -114,7 +114,7 @@
              <number>0</number>
             </property>
             <property name="leftMargin">
-             <number>10</number>
+             <number>0</number>
             </property>
             <property name="topMargin">
              <number>0</number>
@@ -127,6 +127,9 @@
             </property>
             <item>
              <widget class="QLabel" name="label_path_im">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>

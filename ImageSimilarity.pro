@@ -11,20 +11,29 @@ CONFIG += c++11
 SOURCES += \
     imageshow.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    subimagewindow.cpp \
+    value.cpp
 
 HEADERS += \
     imageshow.hpp \
-    mainwindow.hpp
+    mainwindow.hpp \
+    subimagewindow.hpp \
+    value.hpp
 
 FORMS += \
     imageshow.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    subimagewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+#set icon
+RC_ICONS = logo.ico
+
 
 # QtAwesome
 include(./QtAwesome/QtAwesome/QtAwesome.pri)

@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="layoutDirection">
+   <enum>Qt::LeftToRight</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -48,7 +51,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_file">
@@ -56,7 +59,7 @@
      <string>文件</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="action_file_new"/>
+    <addaction name="action_file_open"/>
     <addaction name="action_file_save"/>
     <addaction name="separator"/>
     <addaction name="action_file_exit"/>
@@ -70,8 +73,8 @@
       <rect>
        <x>653</x>
        <y>115</y>
-       <width>208</width>
-       <height>112</height>
+       <width>169</width>
+       <height>92</height>
       </rect>
      </property>
      <property name="title">
@@ -103,6 +106,12 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -128,14 +137,16 @@
     <bool>false</bool>
    </attribute>
    <addaction name="separator"/>
-   <addaction name="action_file_new"/>
+   <addaction name="action_file_open"/>
    <addaction name="action_file_save"/>
    <addaction name="separator"/>
    <addaction name="action_op_his"/>
+   <addaction name="separator"/>
+   <addaction name="action_file_exit"/>
   </widget>
-  <action name="action_file_new">
+  <action name="action_file_open">
    <property name="text">
-    <string>新建</string>
+    <string>打开图片</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -143,7 +154,7 @@
   </action>
   <action name="action_file_save">
    <property name="text">
-    <string>保存</string>
+    <string>保存检测结果</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
