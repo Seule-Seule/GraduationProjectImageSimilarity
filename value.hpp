@@ -1,0 +1,39 @@
+﻿#ifndef VALUE_HPP
+#define VALUE_HPP
+
+
+class Value
+{
+public:
+    Value();
+};
+
+// PropertyBuilderByName 用于生成类的成员变量
+// 并生成set和get方法
+// type 为变量类型
+// access_permission 为变量的访问权限(public, priavte, protected)
+#define PropertyBuilderByName(type, name, access_permission)\
+    access_permission:\
+        type m_##name;\
+    public:\
+    inline void set##name(type v) {\
+        m_##name = v;\
+    }\
+    inline type get##name() {\
+        return m_##name;\
+    }\
+
+// 指针类型
+#define PointerPropertyBuilderByName(type, name, access_permission)\
+    access_permission:\
+        type* m_##name;\
+    public:\
+        inline void set##name(type* v){\
+            m_##name = v;\
+        }\
+        inline type* get##name(){\
+            return m_##name;\
+        }\
+
+
+#endif // VALUE_HPP

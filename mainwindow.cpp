@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "imageshow.hpp"
-#include "QtAwesome.h"
+#include "awesome.hpp"
 
 #include "QTextEdit"
 #include "QSplitter"
@@ -38,7 +38,7 @@ void MainWindow::initConnect()
     connect(ui->btn_msg_debug, &QPushButton::clicked, [&](){
         if ( !messageHide ){
             ui->widget_message->show();
-            ui->btn_message_status->setIcon( m_iconAwesome->icon( fa::chevroncircledown, m_iocnOptions) );
+            ui->btn_message_status->setIcon(  Awesome::getInstace()->icon( fa::chevroncircledown,  Awesome::getInstace()->options) );
             messageHide = true;
         }
         ui->stackedWidget->setCurrentWidget(ui->page_msg_debug);
@@ -46,10 +46,10 @@ void MainWindow::initConnect()
     connect(ui->btn_msg_message, &QPushButton::clicked, [&](){
         if ( !messageHide ){
             ui->widget_message->show();
-            ui->btn_message_status->setIcon( m_iconAwesome->icon( fa::chevroncircledown, m_iocnOptions) );
+            ui->btn_message_status->setIcon(  Awesome::getInstace()->icon( fa::chevroncircledown,  Awesome::getInstace()->options) );
             messageHide = true;
         }
-        ui->stackedWidget->setCurrentWidget(ui->page_msg_test);
+        ui->stackedWidget->setCurrentWidget(ui->page_msg_message);
                     });
 
     // 图片显示框向状态栏推送通知
@@ -66,27 +66,29 @@ void MainWindow::initConnect()
 
 void MainWindow::initModel()
 {
+    // 消息框 Debug 栏
     m_debugListModel = new QStringListModel(this);
     ui->listView_debug->setModel(m_debugListModel);
     ui->listView_debug->setEditTriggers(QAbstractItemView:: NoEditTriggers);
+
+    // 消息框 Message 栏
+    m_messageListModel = new QStringListModel(this);
+    ui->listView_message->setModel(m_debugListModel);
+    ui->listView_message->setEditTriggers(QAbstractItemView:: NoEditTriggers);
 
     debugShowMessage("Medol and view init ok !");
 }
 
 void MainWindow::initUi()
 {
-    m_iconAwesome = new QtAwesome(this);
-    m_iconAwesome->initFontAwesome();
-    m_iocnOptions.insert( "color" , QColor(176,124,227) );
-
     this->setWindowTitle(tr("Image Similarity Discrimination And Processing System"));
-    this->setWindowIcon( m_iconAwesome->icon( fa::image, m_iocnOptions) );
+    this->setWindowIcon( Awesome::getInstace()->icon( fa::image, Awesome::getInstace()->options) );
 
     // 按钮图标
-    ui->action_file_open->setIcon( m_iconAwesome->icon( fa::folderopen, m_iocnOptions) );
-    ui->action_file_save->setIcon( m_iconAwesome->icon( fa::save, m_iocnOptions) );
-    ui->action_op_his->setIcon( m_iconAwesome->icon( fa::image, m_iocnOptions) );
-    ui->action_file_exit->setIcon( m_iconAwesome->icon( fa::times, m_iocnOptions) );
+    ui->action_file_open->setIcon( Awesome::getInstace()->icon( fa::folderopen, Awesome::getInstace()->options) );
+    ui->action_file_save->setIcon( Awesome::getInstace()->icon( fa::save,  Awesome::getInstace()->options) );
+    ui->action_op_his->setIcon( Awesome::getInstace()->icon( fa::image,  Awesome::getInstace()->options) );
+    ui->action_file_exit->setIcon( Awesome::getInstace()->icon( fa::times,  Awesome::getInstace()->options) );
 
     // 按钮提示
     ui->action_file_open->setStatusTip(tr("Open a project."));
@@ -101,7 +103,7 @@ void MainWindow::initUi()
     ui->widget_image->setPalette(pal);
 
     // 消息框
-    ui->btn_message_status->setIcon( m_iconAwesome->icon( fa::chevroncircledown, m_iocnOptions) );
+    ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircledown, Awesome::getInstace()->options) );
     ui->btn_message_status->setFlat(true);
     ui->btn_message_status->setStatusTip(tr("Show or close the message box!"));
     ui->btn_msg_debug->setFlat(true);
@@ -143,12 +145,12 @@ void MainWindow::clickMessageStatusBtn()
 {
     if ( messageHide ){
         ui->widget_message->close();
-        ui->btn_message_status->setIcon( m_iconAwesome->icon( fa::chevroncircleup, m_iocnOptions) );
+        ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircleup, Awesome::getInstace()->options) );
         messageHide = false;
     }
     else{
         ui->widget_message->show();
-        ui->btn_message_status->setIcon( m_iconAwesome->icon( fa::chevroncircledown, m_iocnOptions) );
+        ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircledown, Awesome::getInstace()->options) );
         messageHide = true;
     }
 }

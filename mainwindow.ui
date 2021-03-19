@@ -236,7 +236,7 @@
            </item>
           </layout>
          </widget>
-         <widget class="QWidget" name="page_msg_test">
+         <widget class="QWidget" name="page_msg_message">
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <property name="spacing">
             <number>0</number>
@@ -254,7 +254,7 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QListView" name="listView_test"/>
+            <widget class="QListView" name="listView_message"/>
            </item>
           </layout>
          </widget>

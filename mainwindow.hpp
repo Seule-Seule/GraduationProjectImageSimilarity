@@ -2,7 +2,8 @@
 #define MAINWINDOW_HPP
 
 #include "imageshow.hpp"
-#include "QtAwesome.h"
+#include "awesome.hpp"
+#include "value.hpp"
 
 #include <QMainWindow>
 #include <qstringlistmodel.h>
@@ -41,8 +42,7 @@ public:
 
 private:
     bool  messageHide;
-    QtAwesome *m_iconAwesome;
-    QVariantMap m_iocnOptions;
     QStringListModel *m_debugListModel;
+    QStringListModel *m_messageListModel;
 };
 #endif // MAINWINDOW_HPP

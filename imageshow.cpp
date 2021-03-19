@@ -1,8 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "imageshow.hpp"
-
-#include "QtAwesome.h"
+#include "awesome.hpp"
 
 #include "ui_imageshow.h"
 #include "QDebug"
@@ -29,18 +28,13 @@ ImageShow::ImageShow(QWidget *parent) :
 
 void  ImageShow::initUi()
 {
-    QtAwesome* awesome = new QtAwesome(this);
-    awesome->initFontAwesome();
-    QVariantMap options;
-    options.insert( "color" , QColor(176,124,227) );
-
     // icon
     ui->button_open_im->setFlat(true);
     ui->button_unload_im->setFlat(true);
     ui->button_history_im->setFlat(true);
-    ui->button_open_im->setIcon( awesome->icon( fa::folderopen, options) );
-    ui->button_unload_im->setIcon( awesome->icon( fa::share, options) );
-    ui->button_history_im->setIcon( awesome->icon( fa::chevrondown, options) );
+    ui->button_open_im->setIcon( Awesome::getInstace()->icon( fa::folderopen, Awesome::getInstace()->options) );
+    ui->button_unload_im->setIcon( Awesome::getInstace()->icon( fa::share, Awesome::getInstace()->options) );
+    ui->button_history_im->setIcon( Awesome::getInstace()->icon( fa::chevrondown, Awesome::getInstace()->options) );
     ui->button_open_im->setStatusTip(tr("Open image !"));
     ui->button_unload_im->setStatusTip(tr("Unload image !"));
     ui->button_history_im->setStatusTip(tr("Show open image history !"));
