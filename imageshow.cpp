@@ -1,14 +1,14 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "imageshow.hpp"
-#include "subimagewindow.hpp"
 
 #include "QtAwesome.h"
 
 #include "ui_imageshow.h"
 #include "QDebug"
-#include "qfiledialog.h"
-#include "qfontmetrics.h"
+#include "QFiledialog"
+#include "QFontmetrics"
+#include "QLineEdit"
 
 #include "opencv2/opencv.hpp"
 
@@ -20,26 +20,47 @@ ImageShow::ImageShow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    initUi();
+
+    // 按钮功能
+    connect(ui->button_open_im, SIGNAL(clicked()), this, SLOT(clickOpenImButton()));
+    connect(ui->button_unload_im, SIGNAL(clicked()), this, SLOT(clickUnloadImButton()));
+}
+
+void  ImageShow::initUi()
+{
     QtAwesome* awesome = new QtAwesome(this);
     awesome->initFontAwesome();
     QVariantMap options;
-    options.insert( "color" , QColor(255,230,0) );
+    options.insert( "color" , QColor(176,124,227) );
 
     // icon
-
-    ui->button_history_im->setFlat(true);
     ui->button_open_im->setFlat(true);
-    ui->button_load_im->setFlat(true);
+    ui->button_unload_im->setFlat(true);
+    ui->button_history_im->setFlat(true);
     ui->button_open_im->setIcon( awesome->icon( fa::folderopen, options) );
-    ui->button_load_im->setIcon( awesome->icon( fa::spinner, options) );
-    ui->button_history_im->setIcon(awesome->icon( fa::chevrondown, options));
-    ui->label_path_im->setText(QString(""));
-
-    // button
-    connect(ui->button_open_im, SIGNAL(clicked()), this, SLOT(clickOpenImButton()));
+    ui->button_unload_im->setIcon( awesome->icon( fa::share, options) );
+    ui->button_history_im->setIcon( awesome->icon( fa::chevrondown, options) );
+    ui->button_open_im->setStatusTip(tr("Open image !"));
+    ui->button_unload_im->setStatusTip(tr("Unload image !"));
+    ui->button_history_im->setStatusTip(tr("Show open image history !"));
 
     // 图片显示区域
-    m_imageLabel = new QLabel(ui->mdiArea_show_im);
+    ui->label_show_im->setText(QString(""));
+    ui->label_show_im->setScaledContents(true);
+    ui->label_show_im->setAlignment(Qt::AlignCenter);
+
+    // 图片框背景
+    QPalette pal(ui->label_show_im->palette());
+    pal.setColor(QPalette::Background, QColor(204,204,204));
+    ui->label_show_im->setAutoFillBackground(true);
+    ui->label_show_im->setPalette(pal);
+
+    // 路径框背景
+    QPalette pal1(ui->label_path_im->palette());
+    pal1.setColor(QPalette::Background, QColor(255, 255, 255));
+    ui->label_path_im->setAutoFillBackground(true);
+    ui->label_path_im->setPalette(pal1);
 }
 
 QVector<QString> ImageShow::splitQString(const QString &str, const QString &pattern)
@@ -57,22 +78,37 @@ QVector<QString> ImageShow::splitQString(const QString &str, const QString &patt
     return res;
 }
 
+void ImageShow::debugShowMessage(QString message)
+{
+    if (m_position == ImageShow::left){
+        message = QString("Left Image: ") + message;
+    }
+    else {
+        message = QString("Right Image: ") + message;
+    }
+    emit(sendDebugMessageSig(message));
+}
+
+void ImageShow::statusBurShowMessage(QString message, int timeout)
+{
+    emit(sendStatusBarMessageSig(message, timeout));
+}
+
 void ImageShow::clickOpenImButton()
 {
-
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("open a image."),
                                                     "D:/",
                                                     tr("images(*.png *.jpg *.jpeg *.bmp)"));
     if (filePath.length() == 0){
-        qDebug() << "No file selected!";
-        emit(sendStatusBarMessageSig(tr("No file selected!"), 3000));
+        debugShowMessage("No file selected!");
+        statusBurShowMessage(tr("No file selected!"), 3000);
         return;
     }
     m_matImage = imread(filePath.toStdString());
     if (m_matImage.empty()){
-        qDebug() << "File " << filePath << " open fail!";
-        emit(sendStatusBarMessageSig(tr("Image load fail!"), 3000));
+        debugShowMessage(QString("File ") + filePath + QString(" open fail!"));
+        statusBurShowMessage(tr("Image load fail!"), 3000);
         return;
     }
 
@@ -85,23 +121,50 @@ void ImageShow::clickOpenImButton()
     m_qImage = cvMatToQImage(m_matImage);
 
     setPathIm();
-    //SubImageWindow * imagewin = new SubImageWindow(&m_qImage);
-    //ui->mdiArea_show_im->addSubWindow(imagewin)->resize(300,300);
+    setShowIm();
+    debugShowMessage(QString("Image ") + m_imagePath + QString(" load ok !"));
+}
+
+void  ImageShow::clickUnloadImButton()
+{
+    // unload image.
+    if (m_matImage.empty()){
+        debugShowMessage(QString("No image need unload !"));
+        statusBurShowMessage(tr("No image need unload !"), 3000);
+        return;
+    }
+
+    m_matImage.release();
+    m_imagePath.clear();
+    m_imageName.clear();
+    m_imageId.clear();
+    setPathIm();
+    setShowIm();
+    debugShowMessage(QString("Image unload ok !"));
+    statusBurShowMessage(tr("Image unload ok !"), 3000);
 }
 
 void  ImageShow::setPathIm()
 {
-    QFontMetrics fontWidth(ui->label_path_im->font());//得到每个字符的宽度
-    QString elideNote = fontWidth.elidedText(m_imagePath, Qt::ElideMiddle, ui->label_path_im->width());//填满整个label
-    ui->label_path_im->setText(elideNote);//显示省略好的字符串
-    ui->label_path_im->setToolTip(m_imagePath);//设置tooltips
-    ui->label_path_im->setStyleSheet("background-color: rgb(151,107,214);color:rgb(255,241,115)");
+    QFontMetrics fontWidth(ui->label_path_im->font());
+    QString elideNote = fontWidth.elidedText(m_imagePath, Qt::ElideMiddle, ui->label_path_im->width());
+    ui->label_path_im->setText(elideNote);
+    ui->label_path_im->setToolTip(m_imagePath);
+}
+
+void  ImageShow::setShowIm()
+{
+    if (m_matImage.empty()){
+        ui->label_show_im->clear();
+        return;
+    }
+    ui->label_show_im->setPixmap(QPixmap::fromImage(m_qImage.scaled(ui->label_show_im->size().width(),ui->label_show_im->size().height(),Qt::KeepAspectRatio, Qt::SmoothTransformation)));
 }
 
 void ImageShow::resizeEvent(QResizeEvent *event)
 {
     setPathIm();
-
+    setShowIm();
 }
 
 QImage ImageShow::cvMatToQImage( const cv::Mat &inMat )
