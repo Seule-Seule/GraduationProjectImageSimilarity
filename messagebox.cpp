@@ -21,9 +21,9 @@ MessageBox::MessageBox(QWidget *parent) :
     ui->listView_debug->setEditTriggers(QAbstractItemView:: NoEditTriggers);
 
     // 消息框 Message 栏
-    m_messageListModel = new QStringListModel(this);
-    ui->listView_message->setModel(m_messageListModel);
-    ui->listView_message->setEditTriggers(QAbstractItemView:: NoEditTriggers);
+    m_detectListModel = new QStringListModel(this);
+    ui->listView_detect->setModel(m_detectListModel);
+    ui->listView_detect->setEditTriggers(QAbstractItemView:: NoEditTriggers);
 }
 
 void MessageBox::initUi()
@@ -98,16 +98,16 @@ void MessageBox::debugShowMessage(QString message)
     qDebug() << message;
 }
 
-void MessageBox::messageShowMessage(QString message)
+void MessageBox::detectShowMessage(QString message)
 {
     if (message.isEmpty())
         return;
     QDateTime _currentDateTime =QDateTime::currentDateTime();
     QString _currentTime =_currentDateTime.toString("[ yyyy-MM-dd hh:mm:ss.zzz ]  ");
     message = _currentTime + message;
-    m_messageListModel->insertRow(m_messageListModel->rowCount());
-    QModelIndex index = m_messageListModel->index(m_messageListModel->rowCount()-1,0);
-    m_messageListModel->setData(index, message, Qt::DisplayRole);
+    m_detectListModel->insertRow(m_detectListModel->rowCount());
+    QModelIndex index = m_detectListModel->index(m_detectListModel->rowCount()-1,0);
+    m_detectListModel->setData(index, message, Qt::DisplayRole);
     qDebug() << message;
 }
 

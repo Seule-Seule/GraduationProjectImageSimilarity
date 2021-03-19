@@ -39,6 +39,21 @@
     <bool>true</bool>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QWidget" name="widget" native="true">
       <property name="sizePolicy">
@@ -68,7 +83,7 @@
    </property>
    <widget class="QMenu" name="menu_file">
     <property name="title">
-     <string>文件</string>
+     <string>File</string>
     </property>
     <addaction name="separator"/>
     <addaction name="action_file_open"/>
@@ -78,32 +93,32 @@
    </widget>
    <widget class="QMenu" name="menu_operation">
     <property name="title">
-     <string>相似性算法</string>
+     <string>Algorithm</string>
     </property>
     <widget class="QMenu" name="menu_op_histogram">
      <property name="geometry">
       <rect>
-       <x>653</x>
-       <y>115</y>
-       <width>208</width>
+       <x>547</x>
+       <y>117</y>
+       <width>293</width>
        <height>112</height>
       </rect>
      </property>
      <property name="title">
-      <string>直方图</string>
+      <string>Histogram</string>
      </property>
      <addaction name="action_op_his"/>
      <addaction name="action_op_his_sub"/>
     </widget>
     <widget class="QMenu" name="menuSIFT">
      <property name="title">
-      <string>尺度不变性特征提取(SIFT)</string>
+      <string>SIFT</string>
      </property>
      <addaction name="actiontest"/>
     </widget>
     <widget class="QMenu" name="menuHASH">
      <property name="title">
-      <string>哈希算法(HASH)</string>
+      <string>HASH</string>
      </property>
      <addaction name="actiontest2"/>
     </widget>
@@ -113,8 +128,16 @@
     <addaction name="menuHASH"/>
     <addaction name="separator"/>
    </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="action_help_content"/>
+    <addaction name="action_about"/>
+   </widget>
    <addaction name="menu_file"/>
    <addaction name="menu_operation"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
@@ -138,8 +161,8 @@
    </property>
    <property name="iconSize">
     <size>
-     <width>25</width>
-     <height>25</height>
+     <width>20</width>
+     <height>20</height>
     </size>
    </property>
    <attribute name="toolBarArea">
@@ -153,12 +176,14 @@
    <addaction name="action_file_save"/>
    <addaction name="separator"/>
    <addaction name="action_op_his"/>
+   <addaction name="action_op_his_sub"/>
    <addaction name="separator"/>
+   <addaction name="action_help_content"/>
    <addaction name="action_file_exit"/>
   </widget>
   <action name="action_file_open">
    <property name="text">
-    <string>打开图片</string>
+    <string>Open</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -166,7 +191,7 @@
   </action>
   <action name="action_file_save">
    <property name="text">
-    <string>保存检测结果</string>
+    <string>Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -174,7 +199,7 @@
   </action>
   <action name="action_op_his">
    <property name="text">
-    <string>全局归一化直方图</string>
+    <string>Histogram Equalization</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
@@ -182,7 +207,7 @@
   </action>
   <action name="action_op_his_sub">
    <property name="text">
-    <string>子图像归一化直方图</string>
+    <string>Aptive Histogram Equalization</string>
    </property>
   </action>
   <action name="actiontest">
@@ -197,10 +222,26 @@
   </action>
   <action name="action_file_exit">
    <property name="text">
-    <string>退出</string>
+    <string>Exit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="action_about">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>F2</string>
+   </property>
+  </action>
+  <action name="action_help_content">
+   <property name="text">
+    <string>About Contents</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
    </property>
   </action>
  </widget>

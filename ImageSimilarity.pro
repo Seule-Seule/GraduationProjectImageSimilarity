@@ -10,6 +10,7 @@ CONFIG += C++11
 
 SOURCES += \
     awesome.cpp \
+    imagealgorithm.cpp \
     imageshow.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     awesome.hpp \
+    imagealgorithm.hpp \
     imageshow.hpp \
     mainwindow.hpp \
     messagebox.hpp \

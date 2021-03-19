@@ -5,6 +5,7 @@
 #include "awesome.hpp"
 #include "value.hpp"
 #include "messagebox.hpp"
+#include "imagealgorithm.hpp"
 
 #include <QMainWindow>
 #include <qstringlistmodel.h>
@@ -26,20 +27,19 @@ public slots:
     void clickOpenButton();
 
     void debugShowMessage(QString message);
-    void messageShowMessage(QString message);
+    void detectShowMessage(QString message);
     void statusBurShowMessage(QString message, int timeout);
 
 private:
     void initUi();
     void initConnect();
-
-private:
     Ui::MainWindow *ui;
 
 public:
     PointerPropertyBuilderByName(ImageShow, leftImage, private);
     PointerPropertyBuilderByName(ImageShow, rightImage, private);
     PointerPropertyBuilderByName(MessageBox, messageBox, private);
-
+    PointerPropertyBuilderByName(ImageAlgorithm, imageAlgorithm, private);
 };
+
 #endif // MAINWINDOW_HPP

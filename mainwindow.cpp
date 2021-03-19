@@ -3,6 +3,7 @@
 
 #include "imageshow.hpp"
 #include "awesome.hpp"
+#include "imagealgorithm.hpp"
 
 #include "QTextEdit"
 #include "QSplitter"
@@ -44,6 +45,13 @@ void MainWindow::initConnect()
     // 图片框向消息框推送消息
     connect(m_leftImage, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
     connect(m_rightImage, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
+
+    // 算法向状态栏推送消息
+    connect(m_imageAlgorithm, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
+            SLOT(statusBurShowMessage(QString, int)));
+    // 算法向消息框推送消息
+    connect(m_imageAlgorithm, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
+    connect(m_imageAlgorithm, SIGNAL(sendDetectMessageSig(QString)), this, SLOT(detectShowMessage(QString)));
 }
 
 void MainWindow::initUi()
@@ -54,14 +62,20 @@ void MainWindow::initUi()
     // 按钮图标
     ui->action_file_open->setIcon( Awesome::getInstace()->icon( fa::folderopen, Awesome::getInstace()->options) );
     ui->action_file_save->setIcon( Awesome::getInstace()->icon( fa::save,  Awesome::getInstace()->options) );
-    ui->action_op_his->setIcon( Awesome::getInstace()->icon( fa::image,  Awesome::getInstace()->options) );
+    ui->action_op_his->setIcon( Awesome::getInstace()->icon( fa::areachart,  Awesome::getInstace()->options) );
+    ui->action_op_his_sub->setIcon( Awesome::getInstace()->icon( fa::barchart,  Awesome::getInstace()->options) );
     ui->action_file_exit->setIcon( Awesome::getInstace()->icon( fa::times,  Awesome::getInstace()->options) );
+    ui->action_help_content->setIcon( Awesome::getInstace()->icon( fa::alignleft,  Awesome::getInstace()->options) );
+    ui->action_about->setIcon( Awesome::getInstace()->icon( fa::exclamationcircle,  Awesome::getInstace()->options) );
 
     // 按钮提示
     ui->action_file_open->setStatusTip(tr("Open a project."));
     ui->action_file_exit->setStatusTip(tr("Exit system."));
     ui->action_file_save->setStatusTip(tr("Save."));
-    ui->action_op_his->setStatusTip(tr("Use histogram to detect image similarity."));
+    ui->action_op_his->setStatusTip(tr("Use histogram equalization to detect image similarity."));
+    ui->action_op_his->setStatusTip(tr("Use aptive histogram equalization to detect image similarity."));
+    ui->action_about->setStatusTip(tr("About this software."));
+    ui->action_help_content->setStatusTip(tr("Software help page index."));
 
     // 图片框背景
     QPalette pal(ui->widget->palette());
@@ -72,6 +86,7 @@ void MainWindow::initUi()
 
     QVBoxLayout*    pVBox = new QVBoxLayout(ui->widget);
     pVBox->setContentsMargins(0, 0, 0, 0);
+    ui->widget->setContentsMargins(0, 0, 0, 0);
 
     // 创建图片框
     QSplitter* leftRightSplitter = new QSplitter(Qt::Horizontal, ui->widget);
@@ -92,13 +107,23 @@ void MainWindow::initUi()
     pVBox->addWidget(leftRightSplitter);
     pVBox->addWidget(m_messageBox);
 
+    // 算法实例
+    m_imageAlgorithm = new ImageAlgorithm(this);
+
     debugShowMessage("Ui init ok !");
 }
 
 void MainWindow::clickExitButton()
 {
     debugShowMessage("Exit system !");
-    exit(0);
+
+    // test
+    // m_imageAlgorithm->histogramEequalization(m_leftImage->getmatImage(), ImageAlgorithm::YUV);
+
+    m_imageAlgorithm->histogramImagesSimilarity(m_leftImage->getmatImage(), m_rightImage->getmatImage());
+
+
+    //exit(0);
 }
 
 void MainWindow::clickOpenButton()
@@ -111,9 +136,9 @@ void MainWindow::debugShowMessage(QString message)
     m_messageBox->debugShowMessage(message);
 }
 
-void MainWindow::messageShowMessage(QString message)
+void MainWindow::detectShowMessage(QString message)
 {
-    m_messageBox->messageShowMessage(message);
+    m_messageBox->detectShowMessage(message);
 }
 
 void MainWindow::statusBurShowMessage(QString message, int timeout)
@@ -122,7 +147,7 @@ void MainWindow::statusBurShowMessage(QString message, int timeout)
         debugShowMessage("Message is empty or timeout is zero!");
         return;
     }
-    QString _debug = QString("Statusbar message:") + message + QString(" timeout:") + QString(timeout);
+    QString _debug = QString("Statusbar message:") + message + QString(" timeout:") + QString::number(timeout);
     debugShowMessage(_debug);
     ui->statusbar->showMessage(message, timeout);
 }

@@ -24,7 +24,7 @@ public slots:
     void clickMessageStatusBtn();
 
     void debugShowMessage(QString message);
-    void messageShowMessage(QString message);
+    void detectShowMessage(QString message);
 
 signals:
     void sendStatusBarMessageSig(QString, int);
@@ -34,7 +34,7 @@ private:
     bool m_messageHide;
     int  m_messageMaxHeight;
     QStringListModel *m_debugListModel;
-    QStringListModel *m_messageListModel;
+    QStringListModel *m_detectListModel;
 };
 
 #endif // MESSAGEBOX_HPP
