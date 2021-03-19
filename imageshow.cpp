@@ -95,13 +95,11 @@ void ImageShow::clickOpenImButton()
                                                     "D:/",
                                                     tr("images(*.png *.jpg *.jpeg *.bmp)"));
     if (filePath.length() == 0){
-        debugShowMessage("No file selected!");
         statusBurShowMessage(tr("No file selected!"), 3000);
         return;
     }
     m_matImage = imread(filePath.toStdString());
     if (m_matImage.empty()){
-        debugShowMessage(QString("File ") + filePath + QString(" open fail!"));
         statusBurShowMessage(tr("Image load fail!"), 3000);
         return;
     }
@@ -116,14 +114,13 @@ void ImageShow::clickOpenImButton()
 
     setPathIm();
     setShowIm();
-    debugShowMessage(QString("Image ") + m_imagePath + QString(" load ok !"));
+    statusBurShowMessage(tr("Image load ok !"), 3000);
 }
 
 void  ImageShow::clickUnloadImButton()
 {
     // unload image.
     if (m_matImage.empty()){
-        debugShowMessage(QString("No image need unload !"));
         statusBurShowMessage(tr("No image need unload !"), 3000);
         return;
     }
@@ -134,7 +131,6 @@ void  ImageShow::clickUnloadImButton()
     m_imageId.clear();
     setPathIm();
     setShowIm();
-    debugShowMessage(QString("Image unload ok !"));
     statusBurShowMessage(tr("Image unload ok !"), 3000);
 }
 

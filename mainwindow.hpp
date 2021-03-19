@@ -4,6 +4,7 @@
 #include "imageshow.hpp"
 #include "awesome.hpp"
 #include "value.hpp"
+#include "messagebox.hpp"
 
 #include <QMainWindow>
 #include <qstringlistmodel.h>
@@ -23,14 +24,13 @@ public:
 public slots:
     void clickExitButton();
     void clickOpenButton();
-    void clickMessageStatusBtn();
 
     void debugShowMessage(QString message);
+    void messageShowMessage(QString message);
     void statusBurShowMessage(QString message, int timeout);
 
 private:
     void initUi();
-    void initModel();
     void initConnect();
 
 private:
@@ -39,10 +39,7 @@ private:
 public:
     PointerPropertyBuilderByName(ImageShow, leftImage, private);
     PointerPropertyBuilderByName(ImageShow, rightImage, private);
+    PointerPropertyBuilderByName(MessageBox, messageBox, private);
 
-private:
-    bool  messageHide;
-    QStringListModel *m_debugListModel;
-    QStringListModel *m_messageListModel;
 };
 #endif // MAINWINDOW_HPP

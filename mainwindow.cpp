@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-
-    initModel();
     initUi();
     initConnect();
 }
@@ -32,25 +30,6 @@ void MainWindow::initConnect()
 {
     // 按钮功能
     connect(ui->action_file_exit, SIGNAL(triggered()), this, SLOT(clickExitButton()));
-    connect(ui->btn_message_status, SIGNAL(clicked()), this, SLOT(clickMessageStatusBtn()));
-
-    // 消息框状态切换
-    connect(ui->btn_msg_debug, &QPushButton::clicked, [&](){
-        if ( !messageHide ){
-            ui->widget_message->show();
-            ui->btn_message_status->setIcon(  Awesome::getInstace()->icon( fa::chevroncircledown,  Awesome::getInstace()->options) );
-            messageHide = true;
-        }
-        ui->stackedWidget->setCurrentWidget(ui->page_msg_debug);
-                    });
-    connect(ui->btn_msg_message, &QPushButton::clicked, [&](){
-        if ( !messageHide ){
-            ui->widget_message->show();
-            ui->btn_message_status->setIcon(  Awesome::getInstace()->icon( fa::chevroncircledown,  Awesome::getInstace()->options) );
-            messageHide = true;
-        }
-        ui->stackedWidget->setCurrentWidget(ui->page_msg_message);
-                    });
 
     // 图片显示框向状态栏推送通知
     connect(m_leftImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
@@ -58,25 +37,13 @@ void MainWindow::initConnect()
     connect(m_rightImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
             SLOT(statusBurShowMessage(QString, int)));
 
-    // 图片显示框向消息框推送消息
+    // 消息框向状态栏推送通知
+    connect(m_messageBox, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
+            SLOT(statusBurShowMessage(QString, int)));
+
+    // 图片框向消息框推送消息
     connect(m_leftImage, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
     connect(m_rightImage, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
-    debugShowMessage("All connect complate !");
-}
-
-void MainWindow::initModel()
-{
-    // 消息框 Debug 栏
-    m_debugListModel = new QStringListModel(this);
-    ui->listView_debug->setModel(m_debugListModel);
-    ui->listView_debug->setEditTriggers(QAbstractItemView:: NoEditTriggers);
-
-    // 消息框 Message 栏
-    m_messageListModel = new QStringListModel(this);
-    ui->listView_message->setModel(m_debugListModel);
-    ui->listView_message->setEditTriggers(QAbstractItemView:: NoEditTriggers);
-
-    debugShowMessage("Medol and view init ok !");
 }
 
 void MainWindow::initUi()
@@ -97,35 +64,33 @@ void MainWindow::initUi()
     ui->action_op_his->setStatusTip(tr("Use histogram to detect image similarity."));
 
     // 图片框背景
-    QPalette pal(ui->widget_image->palette());
+    QPalette pal(ui->widget->palette());
     pal.setColor(QPalette::Background, QColor(214,236,240));
-    ui->widget_image->setAutoFillBackground(true);
-    ui->widget_image->setPalette(pal);
+    ui->widget->setAutoFillBackground(true);
+    ui->widget->setPalette(pal);
 
-    // 消息框
-    ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircledown, Awesome::getInstace()->options) );
-    ui->btn_message_status->setFlat(true);
-    ui->btn_message_status->setStatusTip(tr("Show or close the message box!"));
-    ui->btn_msg_debug->setFlat(true);
-    ui->btn_msg_debug->setStatusTip(tr("Show debug message in message box!"));
-    ui->btn_msg_message->setFlat(true);
-    ui->btn_msg_message->setStatusTip(tr("Show image similarity message in message box!"));
-    messageHide = true;
+
+    QVBoxLayout*    pVBox = new QVBoxLayout(ui->widget);
+    pVBox->setContentsMargins(0, 0, 0, 0);
 
     // 创建图片框
-    QHBoxLayout*    pHBox = new QHBoxLayout(ui->widget_image);
-    pHBox->setContentsMargins(0, 0, 0, 0);
-    QSplitter* leftRightSplitter = new QSplitter(Qt::Horizontal, ui->widget_image);
+    QSplitter* leftRightSplitter = new QSplitter(Qt::Horizontal, ui->widget);
     leftRightSplitter->setContentsMargins(0,0,0,0);
-    m_leftImage     = new ImageShow(ui->widget_image);
-    m_rightImage    = new ImageShow(ui->widget_image);
+    m_leftImage     = new ImageShow(ui->widget);
+    m_rightImage    = new ImageShow(ui->widget);
     m_leftImage->setposition(ImageShow::left);
     m_rightImage->setposition(ImageShow::right);
     leftRightSplitter->addWidget(m_leftImage);
     leftRightSplitter->addWidget(m_rightImage);
     leftRightSplitter->setStretchFactor(0, 1);
     leftRightSplitter->setStretchFactor(1, 1);
-    pHBox->addWidget(leftRightSplitter);
+
+    // 创建消息框
+    m_messageBox = new MessageBox(ui->widget);
+    m_messageBox->setMaximumHeight(this->size().height()*1/3);
+
+    pVBox->addWidget(leftRightSplitter);
+    pVBox->addWidget(m_messageBox);
 
     debugShowMessage("Ui init ok !");
 }
@@ -141,39 +106,24 @@ void MainWindow::clickOpenButton()
 
 }
 
-void MainWindow::clickMessageStatusBtn()
-{
-    if ( messageHide ){
-        ui->widget_message->close();
-        ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircleup, Awesome::getInstace()->options) );
-        messageHide = false;
-    }
-    else{
-        ui->widget_message->show();
-        ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircledown, Awesome::getInstace()->options) );
-        messageHide = true;
-    }
-}
-
 void MainWindow::debugShowMessage(QString message)
 {
-    if (message.isEmpty())
-        return;
-    QDateTime _currentDateTime =QDateTime::currentDateTime();
-    QString _currentTime =_currentDateTime.toString("[ yyyy-MM-dd hh:mm:ss.zzz ]  ");
-    message = _currentTime + message;
-    m_debugListModel->insertRow(m_debugListModel->rowCount());
-    QModelIndex index = m_debugListModel->index(m_debugListModel->rowCount()-1,0);
-    m_debugListModel->setData(index, message, Qt::DisplayRole);
-    qDebug() << message;
+    m_messageBox->debugShowMessage(message);
+}
+
+void MainWindow::messageShowMessage(QString message)
+{
+    m_messageBox->messageShowMessage(message);
 }
 
 void MainWindow::statusBurShowMessage(QString message, int timeout)
 {
     if (message.length() == 0 || timeout == 0){
-        debugShowMessage(tr("Message is empty or timeout is zero!"));
+        debugShowMessage("Message is empty or timeout is zero!");
         return;
     }
+    QString _debug = QString("Statusbar message:") + message + QString(" timeout:") + QString(timeout);
+    debugShowMessage(_debug);
     ui->statusbar->showMessage(message, timeout);
 }
 
