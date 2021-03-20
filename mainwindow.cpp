@@ -31,27 +31,33 @@ void MainWindow::initConnect()
 {
     // 按钮功能
     connect(ui->action_file_exit, SIGNAL(triggered()), this, SLOT(clickExitButton()));
+    connect(ui->action_file_save, SIGNAL(triggered()), this, SLOT(clickSaveButton()));
+    connect(ui->action_op_his, SIGNAL(triggered()), this, SLOT(clickOpHistogramButton()));
 
     // 图片显示框向状态栏推送通知
-    connect(m_leftImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
-            SLOT(statusBurShowMessage(QString, int)));
-    connect(m_rightImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
-            SLOT(statusBurShowMessage(QString, int)));
+    connect(m_leftImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
+    connect(m_rightImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
 
     // 消息框向状态栏推送通知
-    connect(m_messageBox, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
-            SLOT(statusBurShowMessage(QString, int)));
+    connect(m_messageBox, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
+
+    // filesave
+    connect(m_fileSave, SIGNAL(sendStatusBarMessageSig(QString, int)), this, SLOT(statusBurShowMessage(QString, int)));
+
+    // 算法向状态栏推送消息
+    connect(m_imageAlgorithm, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
 
     // 图片框向消息框推送消息
     connect(m_leftImage, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
     connect(m_rightImage, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
 
-    // 算法向状态栏推送消息
-    connect(m_imageAlgorithm, SIGNAL(sendStatusBarMessageSig(QString, int)), this,
-            SLOT(statusBurShowMessage(QString, int)));
     // 算法向消息框推送消息
     connect(m_imageAlgorithm, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
     connect(m_imageAlgorithm, SIGNAL(sendDetectMessageSig(QString)), this, SLOT(detectShowMessage(QString)));
+
+    // filesave
+    connect(m_fileSave, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
+    connect(m_fileSave, SIGNAL(sendDetectMessageSig(QString)), this, SLOT(detectShowMessage(QString)));
 }
 
 void MainWindow::initUi()
@@ -110,20 +116,34 @@ void MainWindow::initUi()
     // 算法实例
     m_imageAlgorithm = new ImageAlgorithm(this);
 
+    // 保存文件
+    m_fileSave = new FileSave(this);
+
     debugShowMessage("Ui init ok !");
 }
 
 void MainWindow::clickExitButton()
 {
     debugShowMessage("Exit system !");
+    exit(0);
+}
 
-    // test
-    // m_imageAlgorithm->histogramEequalization(m_leftImage->getmatImage(), ImageAlgorithm::YUV);
+void MainWindow::clickSaveButton()
+{
+    m_fileSave->save(*(m_messageBox->m_debugListModel), m_leftImage->getqPixmap(), m_rightImage->getqPixmap());
+}
 
+void MainWindow::clickOpHistogramButton()
+{
+    if (m_leftImage->getmatImage().empty()){
+        statusBurShowMessage(tr("Left image not load !"), 3000, this);
+        return;
+    }
+    if (m_rightImage->getmatImage().empty()){
+        statusBurShowMessage(tr("Right image not load !"), 3000, this);
+        return;
+    }
     m_imageAlgorithm->histogramImagesSimilarity(m_leftImage->getmatImage(), m_rightImage->getmatImage());
-
-
-    //exit(0);
 }
 
 void MainWindow::clickOpenButton()
@@ -141,14 +161,15 @@ void MainWindow::detectShowMessage(QString message)
     m_messageBox->detectShowMessage(message);
 }
 
-void MainWindow::statusBurShowMessage(QString message, int timeout)
+void MainWindow::statusBurShowMessage(QString message, int timeout, bool selfUse)
 {
     if (message.length() == 0 || timeout == 0){
         debugShowMessage("Message is empty or timeout is zero!");
         return;
     }
-    QString _debug = QString("Statusbar message:") + message + QString(" timeout:") + QString::number(timeout);
-    debugShowMessage(_debug);
+    if (selfUse){
+        debugShowMessage(message);
+    }
     ui->statusbar->showMessage(message, timeout);
 }
 

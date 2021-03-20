@@ -22,7 +22,7 @@ public:
     explicit ImageShow(QWidget *parent = nullptr);
     ~ImageShow();
 
-public:
+private:
     void debugShowMessage(QString message);
     void statusBurShowMessage(QString message, int timeout);
 
@@ -62,6 +62,7 @@ private:
     PropertyBuilderByName(QSize, imageSize, private);
     PropertyBuilderByName(Mat, matImage, private);
     PropertyBuilderByName(QImage, qImage, private);
+    PropertyBuilderByName(QPixmap, qPixmap, private);
     PropertyBuilderByName(Position, position, private);
 
 };

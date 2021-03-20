@@ -6,9 +6,10 @@
 #include "value.hpp"
 #include "messagebox.hpp"
 #include "imagealgorithm.hpp"
+#include "filesave.hpp"
 
 #include <QMainWindow>
-#include <qstringlistmodel.h>
+#include <QStringListModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -24,11 +25,14 @@ public:
 
 public slots:
     void clickExitButton();
+    void clickSaveButton();
     void clickOpenButton();
+    void clickOpHistogramButton();
 
+private slots:
     void debugShowMessage(QString message);
     void detectShowMessage(QString message);
-    void statusBurShowMessage(QString message, int timeout);
+    void statusBurShowMessage(QString message, int timeout, bool selfUse = false /*是否调用，不是槽函数*/);
 
 private:
     void initUi();
@@ -40,6 +44,7 @@ public:
     PointerPropertyBuilderByName(ImageShow, rightImage, private);
     PointerPropertyBuilderByName(MessageBox, messageBox, private);
     PointerPropertyBuilderByName(ImageAlgorithm, imageAlgorithm, private);
+    PointerPropertyBuilderByName(FileSave, fileSave, private);
 };
 
 #endif // MAINWINDOW_HPP

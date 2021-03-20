@@ -56,13 +56,15 @@ void MessageBox::initConnect()
                 clickMessageStatusBtn();
             }
             ui->stackedWidget->setCurrentWidget(ui->page_msg_debug);
+            debugShowMessage("Message box debug page show.");
         });
 
     connect(ui->btn_msg_message, &QPushButton::clicked, [&](){
             if ( m_messageHide ){
                 clickMessageStatusBtn();
             }
-            ui->stackedWidget->setCurrentWidget(ui->page_msg_message);
+            ui->stackedWidget->setCurrentWidget(ui->page_msg_detect);
+            debugShowMessage("Message box debug page detect show.");
         });
 }
 
@@ -75,6 +77,7 @@ void MessageBox::clickMessageStatusBtn()
         ui->widget_message->close();
         ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircleup, Awesome::getInstace()->options) );
         m_messageHide = true;
+        debugShowMessage("Message box hide.");
     }
     else{
         this->setMaximumHeight(m_messageMaxHeight);
@@ -82,6 +85,7 @@ void MessageBox::clickMessageStatusBtn()
         ui->widget_message->show();
         ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircledown, Awesome::getInstace()->options) );
         m_messageHide = false;
+        debugShowMessage("Message box open.");
     }
 }
 
@@ -102,13 +106,10 @@ void MessageBox::detectShowMessage(QString message)
 {
     if (message.isEmpty())
         return;
-    QDateTime _currentDateTime =QDateTime::currentDateTime();
-    QString _currentTime =_currentDateTime.toString("[ yyyy-MM-dd hh:mm:ss.zzz ]  ");
-    message = _currentTime + message;
+
     m_detectListModel->insertRow(m_detectListModel->rowCount());
     QModelIndex index = m_detectListModel->index(m_detectListModel->rowCount()-1,0);
     m_detectListModel->setData(index, message, Qt::DisplayRole);
-    qDebug() << message;
 }
 
 MessageBox::~MessageBox()

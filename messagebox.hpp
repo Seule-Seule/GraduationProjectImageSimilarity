@@ -33,6 +33,8 @@ private:
     Ui::MessageBox *ui;
     bool m_messageHide;
     int  m_messageMaxHeight;
+
+public:
     QStringListModel *m_debugListModel;
     QStringListModel *m_detectListModel;
 };

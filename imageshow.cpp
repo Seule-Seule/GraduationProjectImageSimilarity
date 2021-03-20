@@ -85,6 +85,7 @@ void ImageShow::debugShowMessage(QString message)
 
 void ImageShow::statusBurShowMessage(QString message, int timeout)
 {
+    debugShowMessage(message);
     emit(sendStatusBarMessageSig(message, timeout));
 }
 
@@ -148,7 +149,8 @@ void  ImageShow::setShowIm()
         ui->label_show_im->clear();
         return;
     }
-    ui->label_show_im->setPixmap(QPixmap::fromImage(m_qImage.scaled(ui->label_show_im->size().width(),ui->label_show_im->size().height(),Qt::KeepAspectRatio, Qt::SmoothTransformation)));
+    m_qPixmap = QPixmap::fromImage(m_qImage.scaled(ui->label_show_im->size().width(),ui->label_show_im->size().height(),Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    ui->label_show_im->setPixmap(m_qPixmap);
 }
 
 void ImageShow::resizeEvent(QResizeEvent *event)

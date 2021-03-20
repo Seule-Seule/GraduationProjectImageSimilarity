@@ -87,6 +87,7 @@
     </property>
     <addaction name="separator"/>
     <addaction name="action_file_open"/>
+    <addaction name="separator"/>
     <addaction name="action_file_save"/>
     <addaction name="separator"/>
     <addaction name="action_file_exit"/>
