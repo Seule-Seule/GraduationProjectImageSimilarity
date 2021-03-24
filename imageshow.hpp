@@ -1,7 +1,7 @@
 ﻿#ifndef IMAGESHOW_HPP
 #define IMAGESHOW_HPP
 
-#include "value.hpp"
+#include "tool.hpp"
 
 #include <QWidget>
 #include "QLabel"
@@ -32,7 +32,7 @@ signals:
 
 private:
     QImage  cvMatToQImage( const cv::Mat &inMat );
-    QVector<QString> splitQString(const QString &str, const QString &pattern);
+    
 private:
     void  initUi();
 public :

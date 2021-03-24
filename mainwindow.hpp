@@ -3,8 +3,8 @@
 
 #include "imageshow.hpp"
 #include "awesome.hpp"
-#include "value.hpp"
-#include "messagebox.hpp"
+#include "tool.hpp"
+#include "messageoperate.hpp"
 #include "imagealgorithm.hpp"
 #include "filesave.hpp"
 
@@ -23,16 +23,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-public slots:
-    void clickExitButton();
-    void clickSaveButton();
-    void clickOpenButton();
-    void clickOpHistogramButton();
-
 private slots:
     void debugShowMessage(QString message);
-    void detectShowMessage(QString message);
     void statusBurShowMessage(QString message, int timeout, bool selfUse = false /*是否调用，不是槽函数*/);
+
+    void on_action_about_triggered();
+    void on_action_help_content_triggered();
+    void on_action_file_exit_triggered();
+    void on_action_file_save_triggered();
+
+    void on_action_op_his_triggered();
 
 private:
     void initUi();
@@ -42,7 +42,7 @@ private:
 public:
     PointerPropertyBuilderByName(ImageShow, leftImage, private);
     PointerPropertyBuilderByName(ImageShow, rightImage, private);
-    PointerPropertyBuilderByName(MessageBox, messageBox, private);
+    PointerPropertyBuilderByName(MessageOperate, messageOperate, private);
     PointerPropertyBuilderByName(ImageAlgorithm, imageAlgorithm, private);
     PointerPropertyBuilderByName(FileSave, fileSave, private);
 };

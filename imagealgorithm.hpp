@@ -1,13 +1,13 @@
 ﻿#ifndef IMAGEALGORITHM_HPP
 #define IMAGEALGORITHM_HPP
 
-#include "value.hpp"
+#include "tool.hpp"
 
 #include "opencv2/opencv.hpp"
 #include<opencv2/imgproc/imgproc_c.h>
 #include <opencv2/highgui/highgui_c.h>
 
-#include "QObject"
+#include <QObject>
 
 using namespace cv;
 
@@ -36,7 +36,7 @@ public:
 signals:
     void sendStatusBarMessageSig(QString message, int timeout);
     void sendDebugMessageSig(QString message);
-    void sendDetectMessageSig(QString message);
+    void sendDetectMessageSig(QString);
 
 private:
     void debugShowMessage(QString message);

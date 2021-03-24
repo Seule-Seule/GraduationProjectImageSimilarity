@@ -2,6 +2,7 @@
 
 #include "imageshow.hpp"
 #include "awesome.hpp"
+#include "tool.hpp"
 
 #include "ui_imageshow.h"
 #include "QDebug"
@@ -57,21 +58,6 @@ void  ImageShow::initUi()
     ui->label_path_im->setPalette(pal1);
 }
 
-QVector<QString> ImageShow::splitQString(const QString &str, const QString &pattern)
-{
-    char * strc = new char[strlen(str.toStdString().c_str())+1];
-    strcpy(strc, str.toStdString().c_str());   //string转换成C-string
-    QVector<QString> res;
-    char* temp = strtok(strc, pattern.toStdString().c_str());
-    while(temp != NULL)
-    {
-        res.push_back(QString(temp));
-        temp = strtok(NULL, pattern.toStdString().c_str());
-    }
-    delete[] strc;
-    return res;
-}
-
 void ImageShow::debugShowMessage(QString message)
 {
     if (m_position == ImageShow::left){
@@ -106,10 +92,10 @@ void ImageShow::clickOpenImButton()
     }
 
     m_imagePath = filePath;
-    QVector<QString> _imagePathVector = splitQString(filePath, "/");
+    QVector<QString> _imagePathVector = Tool::splitQString(filePath, "/");
     m_imageName = _imagePathVector.back();
 
-    QVector<QString> _imageNameVector = splitQString(m_imageName, ".");
+    QVector<QString> _imageNameVector = Tool::splitQString(m_imageName, ".");
     m_imageId = _imageNameVector[0];
     m_qImage = cvMatToQImage(m_matImage);
 
@@ -208,7 +194,7 @@ QImage ImageShow::cvMatToQImage( const cv::Mat &inMat )
     }
 
     default:
-        qWarning() << "cvMatToQImage() - cv::Mat image type not handled in switch:" << inMat.type();
+        debugShowMessage(QString("cvMatToQImage() - cv::Mat image type not handled in switch:") + inMat.type() );
         break;
     }
 

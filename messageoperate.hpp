@@ -1,24 +1,30 @@
-﻿#ifndef MESSAGEBOX_HPP
-#define MESSAGEBOX_HPP
+﻿#ifndef MESSAGEOPERATE_H
+#define MESSAGEOPERATE_H
+
+#include "dbmodel.hpp"
 
 #include <QWidget>
 #include <QStringListModel>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlQueryModel>
 
 namespace Ui {
-class MessageBox;
+class MessageOperate;
 }
 
-class MessageBox : public QWidget
+class MessageOperate : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit MessageBox(QWidget *parent = nullptr);
-    ~MessageBox();
+    explicit MessageOperate(QWidget *parent = nullptr);
+    ~MessageOperate();
 
 private:
     void initUi();
     void initConnect();
+    void initDataBase();
 
 public slots:
     void clickMessageStatusBtn();
@@ -30,13 +36,11 @@ signals:
     void sendStatusBarMessageSig(QString, int);
 
 private:
-    Ui::MessageBox *ui;
+    Ui::MessageOperate *ui;
     bool m_messageHide;
     int  m_messageMaxHeight;
+    DBModel *m_dbModel;
 
-public:
-    QStringListModel *m_debugListModel;
-    QStringListModel *m_detectListModel;
 };
 
-#endif // MESSAGEBOX_HPP
+#endif // MESSAGEOPERATE_H

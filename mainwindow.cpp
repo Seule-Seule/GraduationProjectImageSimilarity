@@ -4,6 +4,7 @@
 #include "imageshow.hpp"
 #include "awesome.hpp"
 #include "imagealgorithm.hpp"
+#include "aboutimagesimilarity.hpp"
 
 #include "QTextEdit"
 #include "QSplitter"
@@ -11,6 +12,7 @@
 #include "QDebug"
 #include "QFileDialog"
 #include "QDateTime"
+#include <QDesktopServices>
 
 #include "opencv2/opencv.hpp"
 
@@ -29,17 +31,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::initConnect()
 {
-    // 按钮功能
-    connect(ui->action_file_exit, SIGNAL(triggered()), this, SLOT(clickExitButton()));
-    connect(ui->action_file_save, SIGNAL(triggered()), this, SLOT(clickSaveButton()));
-    connect(ui->action_op_his, SIGNAL(triggered()), this, SLOT(clickOpHistogramButton()));
-
     // 图片显示框向状态栏推送通知
     connect(m_leftImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
     connect(m_rightImage, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
 
     // 消息框向状态栏推送通知
-    connect(m_messageBox, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
+    connect(m_messageOperate, SIGNAL(sendStatusBarMessageSig(QString, int)), this,SLOT(statusBurShowMessage(QString, int)));
 
     // filesave
     connect(m_fileSave, SIGNAL(sendStatusBarMessageSig(QString, int)), this, SLOT(statusBurShowMessage(QString, int)));
@@ -53,11 +50,11 @@ void MainWindow::initConnect()
 
     // 算法向消息框推送消息
     connect(m_imageAlgorithm, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
-    connect(m_imageAlgorithm, SIGNAL(sendDetectMessageSig(QString)), this, SLOT(detectShowMessage(QString)));
+    connect(m_imageAlgorithm, SIGNAL(sendDetectMessageSig(QString)), m_messageOperate, SLOT(detectShowMessage(QString)));
 
     // filesave
     connect(m_fileSave, SIGNAL(sendDebugMessageSig(QString)), this, SLOT(debugShowMessage(QString)));
-    connect(m_fileSave, SIGNAL(sendDetectMessageSig(QString)), this, SLOT(detectShowMessage(QString)));
+
 }
 
 void MainWindow::initUi()
@@ -66,7 +63,7 @@ void MainWindow::initUi()
     this->setWindowIcon( Awesome::getInstace()->icon( fa::image, Awesome::getInstace()->options) );
 
     // 按钮图标
-    ui->action_file_open->setIcon( Awesome::getInstace()->icon( fa::folderopen, Awesome::getInstace()->options) );
+//    ui->action_file_open->setIcon( Awesome::getInstace()->icon( fa::folderopen, Awesome::getInstace()->options) );
     ui->action_file_save->setIcon( Awesome::getInstace()->icon( fa::save,  Awesome::getInstace()->options) );
     ui->action_op_his->setIcon( Awesome::getInstace()->icon( fa::areachart,  Awesome::getInstace()->options) );
     ui->action_op_his_sub->setIcon( Awesome::getInstace()->icon( fa::barchart,  Awesome::getInstace()->options) );
@@ -75,7 +72,7 @@ void MainWindow::initUi()
     ui->action_about->setIcon( Awesome::getInstace()->icon( fa::exclamationcircle,  Awesome::getInstace()->options) );
 
     // 按钮提示
-    ui->action_file_open->setStatusTip(tr("Open a project."));
+//    ui->action_file_open->setStatusTip(tr("Open a project."));
     ui->action_file_exit->setStatusTip(tr("Exit system."));
     ui->action_file_save->setStatusTip(tr("Save."));
     ui->action_op_his->setStatusTip(tr("Use histogram equalization to detect image similarity."));
@@ -107,11 +104,11 @@ void MainWindow::initUi()
     leftRightSplitter->setStretchFactor(1, 1);
 
     // 创建消息框
-    m_messageBox = new MessageBox(ui->widget);
-    m_messageBox->setMaximumHeight(this->size().height()*1/3);
+    m_messageOperate = new MessageOperate(ui->widget);
+    m_messageOperate->setMaximumHeight(this->size().height()*1/3);
 
     pVBox->addWidget(leftRightSplitter);
-    pVBox->addWidget(m_messageBox);
+    pVBox->addWidget(m_messageOperate);
 
     // 算法实例
     m_imageAlgorithm = new ImageAlgorithm(this);
@@ -122,43 +119,9 @@ void MainWindow::initUi()
     debugShowMessage("Ui init ok !");
 }
 
-void MainWindow::clickExitButton()
-{
-    debugShowMessage("Exit system !");
-    exit(0);
-}
-
-void MainWindow::clickSaveButton()
-{
-    m_fileSave->save(*(m_messageBox->m_debugListModel), m_leftImage->getqPixmap(), m_rightImage->getqPixmap());
-}
-
-void MainWindow::clickOpHistogramButton()
-{
-    if (m_leftImage->getmatImage().empty()){
-        statusBurShowMessage(tr("Left image not load !"), 3000, this);
-        return;
-    }
-    if (m_rightImage->getmatImage().empty()){
-        statusBurShowMessage(tr("Right image not load !"), 3000, this);
-        return;
-    }
-    m_imageAlgorithm->histogramImagesSimilarity(m_leftImage->getmatImage(), m_rightImage->getmatImage());
-}
-
-void MainWindow::clickOpenButton()
-{
-
-}
-
 void MainWindow::debugShowMessage(QString message)
 {
-    m_messageBox->debugShowMessage(message);
-}
-
-void MainWindow::detectShowMessage(QString message)
-{
-    m_messageBox->detectShowMessage(message);
+    m_messageOperate->debugShowMessage(message);
 }
 
 void MainWindow::statusBurShowMessage(QString message, int timeout, bool selfUse)
@@ -173,8 +136,44 @@ void MainWindow::statusBurShowMessage(QString message, int timeout, bool selfUse
     ui->statusbar->showMessage(message, timeout);
 }
 
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+
+void MainWindow::on_action_about_triggered()
+{
+    AboutImageSimilarity * about = new AboutImageSimilarity();
+    about->show();
+}
+
+void MainWindow::on_action_help_content_triggered()
+{
+    QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/Seule-Seule")));
+}
+
+void MainWindow::on_action_file_exit_triggered()
+{
+    debugShowMessage("Exit system !");
+    exit(0);
+}
+
+void MainWindow::on_action_file_save_triggered()
+{
+    //m_fileSave->save(*(m_messageOperate->m_detectModel), m_leftImage->getqPixmap(), m_rightImage->getqPixmap());
+}
+
+void MainWindow::on_action_op_his_triggered()
+{
+    if (m_leftImage->getmatImage().empty()){
+        statusBurShowMessage(tr("Left image not load !"), 3000, this);
+        return;
+    }
+    if (m_rightImage->getmatImage().empty()){
+        statusBurShowMessage(tr("Right image not load !"), 3000, this);
+        return;
+    }
+    m_imageAlgorithm->histogramImagesSimilarity(m_leftImage->getmatImage(), m_rightImage->getmatImage());
+}

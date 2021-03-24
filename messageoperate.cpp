@@ -1,32 +1,39 @@
-﻿#include "messagebox.hpp"
-#include "ui_messagebox.h"
+﻿#include "messageoperate.hpp"
+#include "ui_messageoperate.h"
 
 #include "awesome.hpp"
+#include "tool.hpp"
 
 #include <QDebug>
 #include <QDateTime>
+#include <QSqlError>
 
-MessageBox::MessageBox(QWidget *parent) :
+MessageOperate::MessageOperate(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::MessageBox)
+    ui(new Ui::MessageOperate)
 {
     ui->setupUi(this);
+
 
     initUi();
     initConnect();
 
+
     // 消息框 Debug 栏
-    m_debugListModel = new QStringListModel(this);
-    ui->listView_debug->setModel(m_debugListModel);
-    ui->listView_debug->setEditTriggers(QAbstractItemView:: NoEditTriggers);
+//    m_debugListModel = new QStringListModel(this);
+//    ui->listView_debug->setModel(m_debugListModel);
+//    ui->listView_debug->setEditTriggers(QAbstractItemView:: NoEditTriggers);
+
 
     // 消息框 Message 栏
-    m_detectListModel = new QStringListModel(this);
-    ui->listView_detect->setModel(m_detectListModel);
-    ui->listView_detect->setEditTriggers(QAbstractItemView:: NoEditTriggers);
+//    m_detectListModel = new QStringListModel(this);
+//    ui->listView_detect->setModel(m_detectListModel);
+//    ui->listView_detect->setEditTriggers(QAbstractItemView:: NoEditTriggers);
+
+
 }
 
-void MessageBox::initUi()
+void MessageOperate::initUi()
 {
     // 消息框
     ui->btn_message_status->setIcon( Awesome::getInstace()->icon( fa::chevroncircledown, Awesome::getInstace()->options) );
@@ -43,10 +50,21 @@ void MessageBox::initUi()
     ui->frame->setAutoFillBackground(true);
     ui->frame->setPalette(pal);
 
+    ui->tableView_detect->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableView_detect->horizontalHeader()->hide();
+    ui->tableView_detect->verticalHeader()->hide();
+    ui->tableView_detect->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableView_detect->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+
+    // 数据库
+    m_dbModel = new DBModel(this);
+
+    ui->tableView_detect->setModel(m_dbModel->getdetectModel());
+
     m_messageHide = false;
 }
 
-void MessageBox::initConnect()
+void MessageOperate::initConnect()
 {
     connect(ui->btn_message_status, SIGNAL(clicked()), this, SLOT(clickMessageStatusBtn()));
 
@@ -64,11 +82,11 @@ void MessageBox::initConnect()
                 clickMessageStatusBtn();
             }
             ui->stackedWidget->setCurrentWidget(ui->page_msg_detect);
-            debugShowMessage("Message box debug page detect show.");
+            debugShowMessage("Message box detect page show.");
         });
 }
 
-void MessageBox::clickMessageStatusBtn()
+void MessageOperate::clickMessageStatusBtn()
 {
     if ( !m_messageHide ){
         m_messageMaxHeight = this->maximumHeight();
@@ -89,30 +107,25 @@ void MessageBox::clickMessageStatusBtn()
     }
 }
 
-void MessageBox::debugShowMessage(QString message)
+void MessageOperate::debugShowMessage(QString message)
 {
-    if (message.isEmpty())
-        return;
-    QDateTime _currentDateTime =QDateTime::currentDateTime();
-    QString _currentTime =_currentDateTime.toString("[ yyyy-MM-dd hh:mm:ss.zzz ]  ");
-    message = _currentTime + message;
-    m_debugListModel->insertRow(m_debugListModel->rowCount());
-    QModelIndex index = m_debugListModel->index(m_debugListModel->rowCount()-1,0);
-    m_debugListModel->setData(index, message, Qt::DisplayRole);
-    qDebug() << message;
+//    if (message.isEmpty())
+//        return;
+//    QDateTime _currentDateTime =QDateTime::currentDateTime();
+//    QString _currentTime =_currentDateTime.toString("[ yyyy-MM-dd hh:mm:ss.zzz ]  ");
+//    message = _currentTime + message;
+//    m_debugListModel->insertRow(m_debugListModel->rowCount());
+//    QModelIndex index = m_debugListModel->index(m_debugListModel->rowCount()-1,0);
+//    m_debugListModel->setData(index, message, Qt::DisplayRole);
+//    qDebug() << message;
 }
 
-void MessageBox::detectShowMessage(QString message)
+void MessageOperate::detectShowMessage(QString message)
 {
-    if (message.isEmpty())
-        return;
 
-    m_detectListModel->insertRow(m_detectListModel->rowCount());
-    QModelIndex index = m_detectListModel->index(m_detectListModel->rowCount()-1,0);
-    m_detectListModel->setData(index, message, Qt::DisplayRole);
 }
 
-MessageBox::~MessageBox()
+MessageOperate::~MessageOperate()
 {
     delete ui;
 }

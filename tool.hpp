@@ -1,11 +1,16 @@
-﻿#ifndef VALUE_HPP
-#define VALUE_HPP
+﻿#ifndef TOOL_H
+#define TOOL_H
 
+#include <QString>
+#include <QVector>
 
-class Value
+class Tool
 {
 public:
-    Value();
+    Tool();
+public:
+    static QVector<QString> splitQString(const QString &str, const QString &pattern);
+
 };
 
 // PropertyBuilderByName 用于生成类的成员变量
@@ -36,4 +41,4 @@ public:
         }\
 
 
-#endif // VALUE_HPP
+#endif // TOOL_H

@@ -1,7 +1,7 @@
 ﻿#ifndef AWESOME_HPP
 #define AWESOME_HPP
 
-#include "value.hpp"
+#include "tool.hpp"
 
 #include "QtAwesome.h"
 

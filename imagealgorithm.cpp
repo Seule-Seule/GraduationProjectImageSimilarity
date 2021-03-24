@@ -1,6 +1,13 @@
 ﻿#include "imagealgorithm.hpp"
 
+
+#include "opencv2/opencv.hpp"
+#include<opencv2/imgproc/imgproc_c.h>
+#include <opencv2/highgui/highgui_c.h>
+
 #include <QDebug>
+
+using namespace cv;
 
 ImageAlgorithm::ImageAlgorithm(QObject *parent) :
     QObject(parent)
@@ -60,13 +67,12 @@ void ImageAlgorithm::histogramImagesSimilarity(const Mat &leftImage,const Mat &r
     if (leftImage.empty() || rightImage.empty()){
         return;
     }
-    DetectShowMessage(("Histogram Images Similarity: "));
     statusBurShowMessage(tr("Histogram images similarity begin."), 3000);
-    Mat hist0[3], hist1[3];
+    Mat histLeft[3], histRight[3];
 
     // 计算图像直方图
-    CompImageHist(leftImage, hist0[0], hist0[1], hist0[2]);
-    CompImageHist(rightImage, hist1[0], hist1[1], hist1[2]);
+    CompImageHist(leftImage, histLeft[0], histLeft[1], histLeft[2]);
+    CompImageHist(rightImage, histRight[0], histRight[1], histRight[2]);
 
     double sum[4] = { 0.0 };
     double results[3][4] = { 0.0 };
@@ -82,8 +88,8 @@ void ImageAlgorithm::histogramImagesSimilarity(const Mat &leftImage,const Mat &r
         //卡方比较      (method=cv.HISTCMP_CHISQR 值越小，相关度越高，最大值无上界，最小值0
         //相交比较      (method=CV_COMP_INTERSECT)值越大，相关度越高，最大值为9.455319，最小值为0  ?? 最大值不是9.4
         //巴氏距离比较   (method=cv.HISTCMP_BHATTACHARYYA) 值越小，相关度越高，最大值为1，最小值为0
-        results[i][0] = compareHist(hist0[i], hist1[i], CV_COMP_CORREL);
-        results[i][1] = compareHist(hist0[i], hist1[i], CV_COMP_BHATTACHARYYA);
+        results[i][0] = compareHist(histLeft[i], histRight[i], CV_COMP_CORREL);
+        results[i][1] = compareHist(histLeft[i], histRight[i], CV_COMP_BHATTACHARYYA);
 
         // 计算相似度并归一化到[0, 1]  1为100%相似  0为0%相似
         results[i][0] = fabs(results[i][0]);
@@ -92,14 +98,16 @@ void ImageAlgorithm::histogramImagesSimilarity(const Mat &leftImage,const Mat &r
         sum[0] += results[i][0];
         sum[1] += results[i][1];
 
-        QString messageCorrel(QString("  ->Channels ") + channelName[i] + QString("Correl Similarity: ") + QString::number(results[i][0]*100)  + QString("%."));
-        QString messageBhattacharyya(QString("  ->Channels ") + channelName[i] + QString("Bhattacharyya Similarity: ") + QString::number(results[i][1]*100)  + QString("%."));
+        QString messageCorrel = QString(QString("Channel ") + channelName[i] + QString("correl similarity: ") + QString::number(results[i][0]*100)  + QString("%"));
+
+        QString messageBhattacharyya = QString(QString("Channel ") + channelName[i] + QString("bhattacharyya similarity: ") +  QString::number(results[i][1]*100)  + QString("%"));
+
         DetectShowMessage(messageCorrel);
         DetectShowMessage(messageBhattacharyya);
     }
 
-    QString messageCorrelResult(QString("  ->Average ") + QString("Correl Similarity: ") + QString::number(sum[0]/3*100)  + QString("%."));
-    QString messageBhattacharyyaResult(QString("  ->Average ") + QString("Bhattacharyya Similarity: ") + QString::number(sum[1]/3*100)  + QString("%."));
+    QString messageCorrelResult = QString(QString("Average ") + QString("correl similarity:") + QString::number(sum[0]/3*100)  + QString("%"));
+    QString messageBhattacharyyaResult = QString(QString("Average ") + QString("bhattacharyya similarity:") + QString::number(sum[1]/3*100)  + QString("%"));
     DetectShowMessage(messageCorrelResult);
     DetectShowMessage(messageBhattacharyyaResult);
 

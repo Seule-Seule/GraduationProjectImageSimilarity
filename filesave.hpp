@@ -1,12 +1,14 @@
 ﻿#ifndef FILESAVE_H
 #define FILESAVE_H
+#define _CRT_SECURE_NO_WARNINGS
 
-#include "value.hpp"
+#include "tool.hpp"
 
 #include <QObject>
 #include <QFile>
 #include <QPdfWriter>
 #include <QStringListModel>
+#include <QSqlQueryModel>
 
 class FileSave : public QObject
 {
@@ -18,9 +20,11 @@ signals:
 
 private:
     void initFileSave();
+    void writeText(int fontSize, Qt::Alignment flags, QString message);
+    void writeImage( const QPixmap &leftPixmap, const QPixmap &rightPixmap);
 
 public:
-    void save(const QStringListModel &model, const QPixmap &leftPixmap, const QPixmap &rightPixmap);
+    void save(const QSqlQueryModel &model, const QPixmap &leftPixmap, const QPixmap &rightPixmap);
 
 signals:
     void sendStatusBarMessageSig(QString message, int timeout);
@@ -33,19 +37,13 @@ private:
     void statusBurShowMessage(QString message, int timeout);
 
 public:
-    enum fileType{
-        PDF,
-        CSV
-    };
-
-public:
-    PropertyBuilderByName(fileType, fileType, private);
     PropertyBuilderByName(QString, filePath, private);
     PropertyBuilderByName(QString, fileName, private);
     PropertyBuilderByName(bool, fileSave, private);
-    PropertyBuilderByName(size_t, sizeX, private);
-    PropertyBuilderByName(size_t, sizeY, private);
+    PropertyBuilderByName(size_t, iTop, private);
+    PropertyBuilderByName(size_t, iContentWidth, private);
     PointerPropertyBuilderByName(QPdfWriter, pPdfWriter, private);
+    PointerPropertyBuilderByName(QPainter, pPdfPainter, private);
 
 };
 
