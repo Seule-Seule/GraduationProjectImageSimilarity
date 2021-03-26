@@ -9,7 +9,7 @@ public:
     BaseModel();
 
 protected:
-    virtual void debugMessage(const QString message) = 0;
+    virtual void debugMessage(QString message) = 0;
 };
 
 #endif // BASEMODEL_HPP

@@ -66,15 +66,16 @@ void ImageSimilarityView::initUi()
     ui->splitterImage->setStretchFactor(0, 1);
     ui->splitterImage->setStretchFactor(1, 1);
 
-//    // 算法实例
-//    m_imageAlgorithm = new ImageAlgorithm(this);
-
     // DebugD
     m_DebugDisPlayController = new DebugDisPlayController(m_MessageView, this);
+
+    // 算法实例
+    m_ImageAlgorithm = new ImageAlgorithmView(this);
 
     connect(this, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     connect(m_leftImage, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     connect(m_rightImage, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
+    connect(m_ImageAlgorithm, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     debugMessage("Ui init ok !");
 }
 
@@ -92,6 +93,9 @@ void ImageSimilarityView::update()
 
 void ImageSimilarityView::on_ac_Save_triggered()
 {
+    while(1){
+        debugMessage("Save test data ok !");
+    }
     if (!QFile::exists("Result")){
         QDir().mkdir("Result");
         debugMessage("Mkdir Result ok !");
@@ -116,7 +120,7 @@ void ImageSimilarityView::on_ac_Save_triggered()
 
 void ImageSimilarityView::on_ac_Histogram_triggered()
 {
-
+    m_ImageAlgorithm->histogramImagesSimilarity(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
 }
 
 void ImageSimilarityView::on_ac_HistogramSub_triggered()

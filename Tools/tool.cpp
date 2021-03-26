@@ -48,17 +48,19 @@ QString Tool::getDatabaseName()
 
 QString Tool::getDatabaseDebugTableKay()
 {
-    return QString("className,time,message");
-}
-
-QString Tool::getDatabaseDetectTableKay()
-{
-    return QString("");
+    return QString("string_id,className,time,message");
 }
 
 QString Tool::getDatabaseDebugTableShowKay()
 {
     return QString("time, className, message");
+}
+
+QString Tool::getDatabaseDetectTableKay()
+{
+    return QString("date,time,message,value,string_id"
+                   "left_image_path,left_image_name,left_image_po,"
+                   "right_image_path,right_image_name,right_image_po,");
 }
 
 QString Tool::getDatabaseDetectTableShowKay()

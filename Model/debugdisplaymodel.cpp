@@ -3,11 +3,12 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QDateTime>
+#include <QtConcurrent/QtConcurrent>
 
 DebugDisplayModel::DebugDisplayModel(QObject *parent)
 {
     m_dataBase = QSqlDatabase::addDatabase("QSQLITE");
-    m_dataBase.setDatabaseName("ImageSimilarity.db");
+    m_dataBase.setDatabaseName(Tool::getDatabaseName());
     m_dataBase.open();
     if( !m_dataBase.open() )
     {
@@ -27,10 +28,10 @@ DebugDisplayModel::DebugDisplayModel(QObject *parent)
 
 void DebugDisplayModel::updataDebugDisplay()
 {
-    while(qSqlQueryModel->canFetchMore())
-    {
-        qSqlQueryModel->fetchMore();
-    }
+//    while(qSqlQueryModel->canFetchMore())
+//    {
+//        qSqlQueryModel->fetchMore();
+//    }
     qSqlQueryModel-> setQuery( QString( "select ") + Tool::getDatabaseDebugTableShowKay() + QString(" from debug"));
     emit(valueChange());
 }

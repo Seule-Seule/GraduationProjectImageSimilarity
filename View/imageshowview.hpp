@@ -53,6 +53,7 @@ private:
     int imageClear();
 
 public:
+    bool isLoadImage();
     virtual void update();
 
 private slots:

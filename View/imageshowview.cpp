@@ -49,6 +49,14 @@ void ImageShowView::initUi()
     m_Image = new ImageInfo();
 }
 
+bool ImageShowView::isLoadImage()
+{
+    if (m_Image->getImageMat().empty()){
+        return false;
+    }
+    return true;
+}
+
 int ImageShowView::imageClear()
 {
     if (m_Image->getImageMat().empty()){

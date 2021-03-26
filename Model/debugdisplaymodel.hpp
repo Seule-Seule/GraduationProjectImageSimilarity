@@ -2,13 +2,14 @@
 #define DEBUGDISPLAYMODEL_H
 
 #include "Tools/tool.hpp"
+#include "Model/basemodel.hpp"
 
 #include <QObject>
 #include <QSqlQueryModel>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-class DebugDisplayModel : public QObject
+class DebugDisplayModel : public QObject, public BaseModel
 {
     Q_OBJECT
 

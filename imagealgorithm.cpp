@@ -15,7 +15,7 @@ ImageAlgorithm::ImageAlgorithm(QObject *parent) :
 }
 
 // 计算图像直方图
-void CompImageHist(const Mat &src, Mat &b_hist, Mat &g_hist, Mat &r_hist)
+void CompImageHist1(const Mat &src, Mat &b_hist, Mat &g_hist, Mat &r_hist)
 {
     // 分割成3个单通道图像(bgr)
     std::vector<Mat> rgb_planes;
@@ -40,7 +40,7 @@ void CompImageHist(const Mat &src, Mat &b_hist, Mat &g_hist, Mat &r_hist)
 }
 
 // 计算图像直方图 只计算 HS 通道， 不计算 v 通道
-void CompImageHistHSV(const Mat &src, Mat &h_hist, Mat &s_hist)
+void CompImageHistHSV1(const Mat &src, Mat &h_hist, Mat &s_hist)
 {
     // 分割成3个单通道图像(HSV)
     std::vector<Mat> HSV_planes;
@@ -71,8 +71,8 @@ void ImageAlgorithm::histogramImagesSimilarity(const Mat &leftImage,const Mat &r
     Mat histLeft[3], histRight[3];
 
     // 计算图像直方图
-    CompImageHist(leftImage, histLeft[0], histLeft[1], histLeft[2]);
-    CompImageHist(rightImage, histRight[0], histRight[1], histRight[2]);
+    CompImageHist1(leftImage, histLeft[0], histLeft[1], histLeft[2]);
+    CompImageHist1(rightImage, histRight[0], histRight[1], histRight[2]);
 
     double sum[4] = { 0.0 };
     double results[3][4] = { 0.0 };
@@ -119,8 +119,8 @@ void ImageAlgorithm::histogramImagesSimilarity(const Mat &leftImage,const Mat &r
 //    cvtColor(leftImage, leftImage, CV_BGR2HSV);
 //    cvtColor(rightImage, rightImage, CV_BGR2HSV);
 //    // 计算图像直方图 HSV
-//    CompImageHistHSV(leftImage, hist0[0], hist0[1]);
-//    CompImageHistHSV(rightImage, hist1[0], hist1[1]);
+//    CompImageHistHSV1(leftImage, hist0[0], hist0[1]);
+//    CompImageHistHSV1(rightImage, hist1[0], hist1[1]);
 
 //    double sum[4] = { 0.0 };
 //    double results[4] = { 0.0 };

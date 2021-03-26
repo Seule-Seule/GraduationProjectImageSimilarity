@@ -13,6 +13,7 @@ SOURCES += \
     Controller/debugdisplaycontroller.cpp \
     Model/basemodel.cpp \
     Model/debugdisplaymodel.cpp \
+    Model/detectdisplaymodel.cpp \
     Tools/awesome.cpp \
     Tools/tool.cpp \
     View/ImageSimilarityView.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     Controller/debugdisplaycontroller.hpp \
     Model/basemodel.hpp \
     Model/debugdisplaymodel.hpp \
+    Model/detectdisplaymodel.hpp \
     Tools/awesome.hpp \
     Tools/tool.hpp \
     View/ImageSimilarityView.hpp \
@@ -67,8 +69,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 #set icon
-RC_ICONS = logo.ico
-
+RC_ICONS = logo128.ico
 
 # QtAwesome
 include(./QtAwesome/QtAwesome/QtAwesome.pri)
