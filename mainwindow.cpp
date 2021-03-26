@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "imageshow.hpp"
-#include "awesome.hpp"
+#include "Tools/awesome.hpp"
 #include "imagealgorithm.hpp"
 #include "aboutimagesimilarity.hpp"
 

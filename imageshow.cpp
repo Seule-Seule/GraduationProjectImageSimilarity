@@ -1,8 +1,8 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "imageshow.hpp"
-#include "awesome.hpp"
-#include "tool.hpp"
+#include "Tools/awesome.hpp"
+#include "Tools/tool.hpp"
 
 #include "ui_imageshow.h"
 #include "QDebug"

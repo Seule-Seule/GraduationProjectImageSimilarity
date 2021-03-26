@@ -9,29 +9,53 @@ CONFIG += C++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Controller/basecontroller.cpp \
+    Controller/debugdisplaycontroller.cpp \
+    Model/basemodel.cpp \
+    Model/debugdisplaymodel.cpp \
+    Tools/awesome.cpp \
+    Tools/tool.cpp \
+    View/ImageSimilarityView.cpp \
+    View/aboutview.cpp \
+    View/baseview.cpp \
+    View/imagealgorithmview.cpp \
+    View/imageshowview.cpp \
+    View/messageboxview.cpp \
     aboutimagesimilarity.cpp \
-    awesome.cpp \
     dbmodel.cpp \
     filesave.cpp \
     imagealgorithm.cpp \
     imageshow.cpp \
     main.cpp \
     mainwindow.cpp \
-    messageoperate.cpp \
-    tool.cpp
+    messageoperate.cpp
 
 HEADERS += \
+    Controller/basecontroller.hpp \
+    Controller/debugdisplaycontroller.hpp \
+    Model/basemodel.hpp \
+    Model/debugdisplaymodel.hpp \
+    Tools/awesome.hpp \
+    Tools/tool.hpp \
+    View/ImageSimilarityView.hpp \
+    View/aboutview.hpp \
+    View/baseview.hpp \
+    View/imagealgorithmview.hpp \
+    View/imageshowview.hpp \
+    View/messageboxview.hpp \
     aboutimagesimilarity.hpp \
-    awesome.hpp \
     dbmodel.hpp \
     filesave.hpp \
     imagealgorithm.hpp \
     imageshow.hpp \
     mainwindow.hpp \
-    messageoperate.hpp \
-    tool.hpp
+    messageoperate.hpp
 
 FORMS += \
+    View/ImageSimilarityView.ui \
+    View/aboutview.ui \
+    View/imageshowview.ui \
+    View/messageboxview.ui \
     aboutimagesimilarity.ui \
     imageshow.ui \
     mainwindow.ui \

@@ -1,8 +1,8 @@
 ﻿#include "messageoperate.hpp"
 #include "ui_messageoperate.h"
 
-#include "awesome.hpp"
-#include "tool.hpp"
+#include "Tools/awesome.hpp"
+#include "Tools/tool.hpp"
 
 #include <QDebug>
 #include <QDateTime>

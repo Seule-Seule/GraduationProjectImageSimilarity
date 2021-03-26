@@ -1,7 +1,7 @@
 ﻿#ifndef IMAGEALGORITHM_HPP
 #define IMAGEALGORITHM_HPP
 
-#include "tool.hpp"
+#include "Tools/tool.hpp"
 
 #include "opencv2/opencv.hpp"
 #include<opencv2/imgproc/imgproc_c.h>

@@ -2,8 +2,8 @@
 #define MAINWINDOW_HPP
 
 #include "imageshow.hpp"
-#include "awesome.hpp"
-#include "tool.hpp"
+#include "Tools/awesome.hpp"
+#include "Tools/tool.hpp"
 #include "messageoperate.hpp"
 #include "imagealgorithm.hpp"
 #include "filesave.hpp"

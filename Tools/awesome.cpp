@@ -15,3 +15,14 @@ Awesome *Awesome::getInstace()
     }
     return awesome;
 }
+
+QColor Awesome::getUiEmementColor()
+{
+    return QColor(176,124,227);
+}
+
+//(214,236,240)
+QColor Awesome::getUiBackgroundColor()
+{
+    return QColor(214,236,240);
+}

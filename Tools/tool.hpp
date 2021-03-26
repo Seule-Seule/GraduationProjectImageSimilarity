@@ -3,6 +3,9 @@
 
 #include <QString>
 #include <QVector>
+#include <QWidget>
+#include <QColor>
+#include <QPushButton>
 
 class Tool
 {
@@ -11,6 +14,15 @@ public:
 public:
     static QVector<QString> splitQString(const QString &str, const QString &pattern);
 
+    static void setUiElementColor(QWidget *wid, QColor color);
+    static void setUiBackgroundColor(QWidget *wid, QColor color);
+
+    static QString getDatabaseName();
+    static QString getDatabaseDebugTableKay();
+    static QString getDatabaseDetectTableKay();
+
+    static QString getDatabaseDebugTableShowKay();
+    static QString getDatabaseDetectTableShowKay();
 };
 
 // PropertyBuilderByName 用于生成类的成员变量

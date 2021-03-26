@@ -15,6 +15,9 @@ private:
 public:
     static Awesome *getInstace();
 
+    QColor getUiEmementColor();
+    QColor getUiBackgroundColor();
+
 private:
     static Awesome *awesome;
 

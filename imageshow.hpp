@@ -1,7 +1,7 @@
 ﻿#ifndef IMAGESHOW_HPP
 #define IMAGESHOW_HPP
 
-#include "tool.hpp"
+#include "Tools/tool.hpp"
 
 #include <QWidget>
 #include "QLabel"

@@ -1,4 +1,4 @@
-﻿#include "mainwindow.hpp"
+﻿#include "View/ImageSimilarityView.hpp"
 
 #include <QApplication>
 #include <QTextCodec>
@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    ImageSimilarityView w;
     w.show();
     return a.exec();
 }
