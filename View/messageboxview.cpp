@@ -69,9 +69,19 @@ void MessageBoxView::debugMessage(QString message)
     emit(debugMessageSig(message));
 }
 
+void MessageBoxView::detectMessage(QString message)
+{
+    emit(detectMessageSig(message));
+}
+
 void MessageBoxView::setDebugModel(QAbstractItemModel *model)
 {
     ui->tableView_debug->setModel(model);
+}
+
+void MessageBoxView::setDetectModel(QAbstractItemModel *model)
+{
+    ui->tableView_detect->setModel(model);
 }
 
 void MessageBoxView::on_btn_message_status_clicked()

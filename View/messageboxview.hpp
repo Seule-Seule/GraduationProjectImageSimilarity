@@ -1,7 +1,6 @@
 ﻿#ifndef MESSAGEBOXVIEW_HPP
 #define MESSAGEBOXVIEW_HPP
 
-#include "View/baseview.hpp"
 #include "Tools/awesome.hpp"
 
 #include <QWidget>
@@ -11,7 +10,7 @@ namespace Ui {
 class MessageBoxView;
 }
 
-class MessageBoxView : public QWidget, public BaseView
+class MessageBoxView : public QWidget
 {
     Q_OBJECT
 
@@ -20,13 +19,16 @@ public:
     ~MessageBoxView();
 
     void setDebugModel(QAbstractItemModel *model);
+    void setDetectModel(QAbstractItemModel *model);
 
 signals:
     void debugMessageSig(QString);
+    void detectMessageSig(QString);
 
 public slots:
-    virtual void update();
+    void update();
     void debugMessage(QString message);
+    void detectMessage(QString message);
 
 private slots:
     void initUi();

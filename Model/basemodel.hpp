@@ -2,14 +2,19 @@
 #define BASEMODEL_HPP
 
 #include <QString>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 class BaseModel
 {
 public:
     BaseModel();
-
-protected:
-    virtual void debugMessage(QString message) = 0;
+    static QSqlDatabase *getDatabase();
+    static QSqlQuery *getQSqlQuery();
+private:
+    bool initFlag;
+    static QSqlDatabase *m_dataBase;
+    static QSqlQuery        *m_sqlQuery;
 };
 
 #endif // BASEMODEL_HPP

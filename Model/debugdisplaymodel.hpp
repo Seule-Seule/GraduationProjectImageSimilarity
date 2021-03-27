@@ -9,7 +9,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-class DebugDisplayModel : public QObject, public BaseModel
+class DebugDisplayModel : public QObject
 {
     Q_OBJECT
 
@@ -20,7 +20,7 @@ signals:
     void valueChange();
 
 public slots:
-    virtual void debugMessage(const QString message);
+    void debugMessage(const QString message);
 
 private slots:
     void updataDebugDisplay();
@@ -29,7 +29,7 @@ public:
     QSqlQueryModel   *qSqlQueryModel;
 
 private:
-    QSqlDatabase     m_dataBase;
+    QSqlDatabase     *m_dataBase;
     QSqlQuery        *m_sqlQuery;
 };
 

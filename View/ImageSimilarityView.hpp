@@ -5,13 +5,13 @@
 
 #include "Tools/awesome.hpp"
 #include "Tools/tool.hpp"
-#include "View/baseview.hpp"
 #include "View/imageshowview.hpp"
 #include "View/messageboxview.hpp"
 #include "View/aboutview.hpp"
 #include "View/imagealgorithmview.hpp"
 
 #include "Controller/debugdisplaycontroller.hpp"
+#include "Controller/detectdisplaycontroller.hpp"
 
 #include <QSplitter>
 
@@ -25,7 +25,7 @@ namespace Ui {
 class ImageSimilarityView;
 }
 
-class ImageSimilarityView : public QMainWindow, public BaseView
+class ImageSimilarityView : public QMainWindow
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ private:
     void debugMessage(QString message);
 
 public:
-    virtual void update();
+    void update();
 
 private slots:
     void on_ac_Save_triggered();
@@ -56,10 +56,10 @@ private:
     PointerPropertyBuilderByName(ImageShowView, leftImage, private);
     PointerPropertyBuilderByName(ImageShowView, rightImage, private);
     PointerPropertyBuilderByName(MessageBoxView, MessageView, private);
-        PointerPropertyBuilderByName(ImageAlgorithmView, ImageAlgorithm, private);
+    PointerPropertyBuilderByName(ImageAlgorithmView, ImageAlgorithm, private);
 
     PointerPropertyBuilderByName(DebugDisPlayController, DebugDisPlayController, private);
-
+    PointerPropertyBuilderByName(DetectDisplayController, DetectDisplayController, private);
 };
 
 #endif // IMAGESIMILARITYVIEW_HPP

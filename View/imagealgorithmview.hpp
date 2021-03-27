@@ -1,8 +1,6 @@
 ﻿#ifndef IMAGEALGORITHMVIEW_HPP
 #define IMAGEALGORITHMVIEW_HPP
 
-#include "View/baseview.hpp"
-
 #include "opencv2/opencv.hpp"
 #include<opencv2/imgproc/imgproc_c.h>
 #include <opencv2/highgui/highgui_c.h>
@@ -12,7 +10,7 @@
 
 using namespace cv;
 
-class ImageAlgorithmView : public QObject, public BaseView
+class ImageAlgorithmView : public QObject
 {
     Q_OBJECT
 public:
@@ -20,9 +18,12 @@ public:
 
 signals:
     void debugMessageSig(QString);
+    void detectMessageSig(QString);
+
 private :
-    virtual void update();
-    virtual  void debugMessage(QString message);
+    void update();
+    void debugMessage(QString message);
+    void detectMessage(QString message);
 
 public:
     void histogramImagesSimilarity(const Mat &leftImage,const Mat &rightImage);

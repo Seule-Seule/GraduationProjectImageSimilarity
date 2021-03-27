@@ -57,9 +57,10 @@ void CompImageHistHSV(const Mat &src, Mat &h_hist, Mat &s_hist)
 void ImageAlgorithmView::histogramImagesSimilarity(const Mat &leftImage,const Mat &rightImage)
 {
     if (leftImage.empty() || rightImage.empty()){
+        debugMessage("histogramImagesSimilarity image not load !");
         return;
     }
-
+    debugMessage("histogramImagesSimilarity begin !");
     Mat histLeft[3], histRight[3];
 
     // 计算图像直方图
@@ -90,19 +91,20 @@ void ImageAlgorithmView::histogramImagesSimilarity(const Mat &leftImage,const Ma
         sum[0] += results[i][0];
         sum[1] += results[i][1];
 
-        QString messageCorrel = QString(QString("Channel ") + channelName[i] + QString("correl similarity: ") + QString::number(results[i][0]*100)  + QString("%"));
+        QString messageCorrel = QString(QString("Channel ") + channelName[i] + QString("correl similarity::") + QString::number(results[i][0]*100)  + QString("%"));
 
-        QString messageBhattacharyya = QString(QString("Channel ") + channelName[i] + QString("bhattacharyya similarity: ") +  QString::number(results[i][1]*100)  + QString("%"));
+        QString messageBhattacharyya = QString(QString("Channel ") + channelName[i] + QString("bhattacharyya similarity::") +  QString::number(results[i][1]*100)  + QString("%"));
 
-        debugMessage(messageCorrel);
-        debugMessage(messageBhattacharyya);
+        detectMessage(messageCorrel);
+        detectMessage(messageBhattacharyya);
     }
 
-    QString messageCorrelResult = QString(QString("Average ") + QString("correl similarity:") + QString::number(sum[0]/3*100)  + QString("%"));
-    QString messageBhattacharyyaResult = QString(QString("Average ") + QString("bhattacharyya similarity:") + QString::number(sum[1]/3*100)  + QString("%"));
-    debugMessage(messageCorrelResult);
-    debugMessage(messageBhattacharyyaResult);
+    QString messageCorrelResult = QString(QString("Average ") + QString("correl similarity::") + QString::number(sum[0]/3*100)  + QString("%"));
+    QString messageBhattacharyyaResult = QString(QString("Average ") + QString("bhattacharyya similarity::") + QString::number(sum[1]/3*100)  + QString("%"));
+    detectMessage(messageCorrelResult);
+    detectMessage(messageBhattacharyyaResult);
 
+    debugMessage("histogramImagesSimilarity end !");
 
     // TODO: HSV 空间每次计算结果不一样，好像是每次计算结果偏大？？ 很迷
     //    Mat hist0[2], hist1[2];
@@ -146,7 +148,11 @@ void ImageAlgorithmView::update()
 
 void ImageAlgorithmView::debugMessage(QString message)
 {
-    QString objName = this->objectName();
-    message = objName + QString("::") + message;
+    message = QString("ImageAlgorithmView") + QString("::") + message;
     emit(debugMessageSig(message));
+}
+
+void ImageAlgorithmView::detectMessage(QString message)
+{
+     emit(detectMessageSig(message));
 }

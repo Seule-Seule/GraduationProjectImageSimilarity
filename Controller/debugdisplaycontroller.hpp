@@ -1,13 +1,12 @@
 ﻿#ifndef DEBUGDISPLAYCONTROLLER_HPP
 #define DEBUGDISPLAYCONTROLLER_HPP
 
-#include "basecontroller.hpp"
 #include "View/messageboxview.hpp"
 #include "Model/debugdisplaymodel.hpp"
 
 #include <QObject>
 
-class DebugDisPlayController : public QObject, public BaseController
+class DebugDisPlayController : public QObject
 {
     Q_OBJECT
 public:

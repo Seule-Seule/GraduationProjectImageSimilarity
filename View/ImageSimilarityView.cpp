@@ -68,6 +68,7 @@ void ImageSimilarityView::initUi()
 
     // DebugD
     m_DebugDisPlayController = new DebugDisPlayController(m_MessageView, this);
+    m_DetectDisplayController = new DetectDisplayController(m_MessageView, m_leftImage->getImage(), m_rightImage->getImage(), this);
 
     // 算法实例
     m_ImageAlgorithm = new ImageAlgorithmView(this);
@@ -76,6 +77,9 @@ void ImageSimilarityView::initUi()
     connect(m_leftImage, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     connect(m_rightImage, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     connect(m_ImageAlgorithm, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
+
+    connect(m_ImageAlgorithm, SIGNAL(detectMessageSig(QString)), m_MessageView, SLOT(detectMessage(QString)));
+
     debugMessage("Ui init ok !");
 }
 

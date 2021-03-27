@@ -3,7 +3,6 @@
 
 #include <QWidget>
 
-#include "View/baseview.hpp"
 #include "Model/basemodel.hpp"
 #include "Tools/awesome.hpp"
 #include "Tools/tool.hpp"
@@ -34,7 +33,7 @@ public:
 };
 
 
-class ImageShowView : public QWidget, public BaseView
+class ImageShowView : public QWidget
 {
     Q_OBJECT
 
@@ -54,7 +53,7 @@ private:
 
 public:
     bool isLoadImage();
-    virtual void update();
+    void update();
 
 private slots:
     void debugMessage(QString message);
