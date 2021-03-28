@@ -8,6 +8,7 @@
 #include <QSqlQueryModel>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QString>
 
 class DebugDisplayModel : public QObject
 {
@@ -21,6 +22,7 @@ signals:
 
 public slots:
     void debugMessage(const QString message);
+    void setProjectId(QString id);
 
 private slots:
     void updataDebugDisplay();
@@ -31,6 +33,7 @@ public:
 private:
     QSqlDatabase     *m_dataBase;
     QSqlQuery        *m_sqlQuery;
+    PropertyBuilderByName(QString, projectId, private);
 };
 
 #endif // DEBUGDISPLAYMODEL_H

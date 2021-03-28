@@ -150,6 +150,8 @@
      </property>
      <addaction name="ac_Histogram"/>
      <addaction name="ac_HistogramSub"/>
+     <addaction name="ac_Left_Histogram"/>
+     <addaction name="ac_Right_Histogram"/>
     </widget>
     <widget class="QMenu" name="menu_SIFT">
      <property name="title">
@@ -258,6 +260,16 @@
   <action name="ac_About_Contents">
    <property name="text">
     <string>About Contents</string>
+   </property>
+  </action>
+  <action name="ac_Left_Histogram">
+   <property name="text">
+    <string>Show Left Histogram</string>
+   </property>
+  </action>
+  <action name="ac_Right_Histogram">
+   <property name="text">
+    <string>Show Right Histogram</string>
    </property>
   </action>
  </widget>

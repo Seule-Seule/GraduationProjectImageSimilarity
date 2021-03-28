@@ -1,11 +1,16 @@
 ﻿#include "ImageSimilarityView.hpp"
 #include "ui_ImageSimilarityView.h"
 
+#include "imagealgorithm.hpp"
+
 #include <QUrl>
 #include <QDesktopServices>
 #include <QFile>
 #include <QDir>
 #include <QDateTime>
+#include <QtConcurrent>
+#include <QFuture>
+#include <QMessageBox>
 
 ImageSimilarityView::ImageSimilarityView(QWidget *parent) :
     QMainWindow(parent),
@@ -80,6 +85,12 @@ void ImageSimilarityView::initUi()
 
     connect(m_ImageAlgorithm, SIGNAL(detectMessageSig(QString)), m_MessageView, SLOT(detectMessage(QString)));
 
+    // 更新project id
+    connect(m_leftImage, SIGNAL(imageChangeSig()), this, SLOT(update()));
+    connect(m_rightImage, SIGNAL(imageChangeSig()), this, SLOT(update()));
+    connect(this, SIGNAL(projectIdSig(QString)), m_MessageView, SIGNAL(projectIdSig(QString)));
+
+    update();
     debugMessage("Ui init ok !");
 }
 
@@ -92,14 +103,22 @@ void ImageSimilarityView::debugMessage(QString message)
 
 void ImageSimilarityView::update()
 {
+    QString ProjectId;
 
+    if (!m_leftImage->isLoadImage() || !m_rightImage->isLoadImage()){
+        ProjectId = QString::number(0);
+    }else{
+        ProjectId = QString::number(QDateTime::currentMSecsSinceEpoch());
+        m_MessageView->setProjectId(ProjectId);
+    }
+
+    m_HistogramFlag = false;
+
+    emit(projectIdSig(ProjectId));
 }
 
 void ImageSimilarityView::on_ac_Save_triggered()
 {
-    while(1){
-        debugMessage("Save test data ok !");
-    }
     if (!QFile::exists("Result")){
         QDir().mkdir("Result");
         debugMessage("Mkdir Result ok !");
@@ -114,17 +133,25 @@ void ImageSimilarityView::on_ac_Save_triggered()
     //QString timestamp1 = dateTime.fromMSecsSinceEpoch(timestamp.toULongLong()).toString("yyyy-MM-dd hh-mm-ss-zzz");
 
     if (!QFile::exists(timestamp)){
-        QFile::copy("ImageSimilarity.db", QString("Result/") + timestamp + QString(".db"));
+        QtConcurrent::run([&timestamp](){
+            QFile::copy(Tool::getDatabaseName(), QString("Result/") + timestamp + QString(".db"));
+        });
         debugMessage(QString("Database ") + timestamp + QString(".db save ok !"));
         return;
     }
-
-
 }
 
 void ImageSimilarityView::on_ac_Histogram_triggered()
 {
-    m_ImageAlgorithm->histogramImagesSimilarity(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+
+    if (m_HistogramFlag){
+        QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Histogram Images Similarity Is Complete !")));
+        return;
+    }
+    m_HistogramFlag = true;
+    QtConcurrent::run([=](){m_ImageAlgorithm->histogramImagesSimilarity( \
+        m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+        });
 }
 
 void ImageSimilarityView::on_ac_HistogramSub_triggered()
@@ -146,5 +173,12 @@ void ImageSimilarityView::on_ac_About_triggered()
 
 void ImageSimilarityView::on_ac_About_Contents_triggered()
 {
-    QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/Seule-Seule")));
+    QDesktopServices::openUrl(QUrl(QLatin1String("https://github.com/Seule-Seule/GraduationProjectImageSimilarity")));
+}
+
+void ImageSimilarityView::on_ac_Left_Histogram_triggered()
+{
+    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::GRAY, nullptr, true);
+    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::RGB, nullptr, true);
+    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::HSV, nullptr, true);
 }

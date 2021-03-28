@@ -112,6 +112,7 @@ void ImageShowView::on_Btn_Load_clicked()
 
     setPathIm();
     setShowIm();
+    emit(imageChangeSig());
     debugMessage("Image load ok !");
 }
 

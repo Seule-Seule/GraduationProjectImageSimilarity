@@ -1,60 +1,138 @@
 ﻿#include "imagealgorithmview.hpp"
 
+#include <QDebug>
+
 ImageAlgorithmView::ImageAlgorithmView(QObject *parent) : QObject(parent)
 {
 
 }
 
-// 计算图像直方图
-void CompImageHist(const Mat &src, Mat &b_hist, Mat &g_hist, Mat &r_hist)
+void ImageAlgorithmView::DrawHist(String window_name, int width, int height, QVector<Mat> &hist_in)
 {
-    // 分割成3个单通道图像(bgr)
-    std::vector<Mat> rgb_planes;
-    split(src, rgb_planes);
+    int histBinNum = 255;
+    int bin_w = cvRound((double)(width-10)/histBinNum);
+    int hist_size = hist_in.size();
+    Mat hist_mage(height, width, CV_8UC3, Scalar(0, 0, 0));
+    QVector<Scalar> color = {Scalar(255, 0, 0) /*b*/, Scalar(0, 255, 0) /*g*/, Scalar(0, 0, 255) /*r*/};
 
-    // 设定bin数目及取值范围
+    // 映射到宽高空间
+    for (int number= 0; number<hist_size; number++){
+        normalize(hist_in[number], hist_in[number], 5, (height- 5), NORM_MINMAX, -1, Mat());
+    }
+    //循环绘制直方图
+    for(int i = 1; i < histBinNum; i++)
+    {
+        for (int line_index = 0; line_index < hist_size; line_index++){
+            line(hist_mage, Point(5+bin_w*(i-1), height - cvRound(hist_in[line_index].at<float>(i-1))),
+                 Point(5+bin_w*(i), height - cvRound(hist_in[line_index].at<float>(i))),
+                 color[line_index], 1, LINE_AA, 0);
+            // 画竖线 填满直方图区域
+//            line(hist_mage, Point(5+bin_w*(i-1), height - 5),
+//                 Point(5+bin_w*(i-1), height - cvRound(hist_in[line_index].at<float>(i-1))),
+//                 color[line_index], 1, LINE_AA, 0);
+        }
+    }
+    namedWindow(window_name, WINDOW_AUTOSIZE);
+    imshow(window_name, hist_mage);
+}
+
+void ImageAlgorithmView::CompImageHist(const Mat &src_in,WorkSpace ws,
+                  Mat *hist_out,bool display_flag, bool normalize_flag)
+{
+    if (src_in.empty()){
+        debugMessage("CompImageHist src_in is empty !");
+        return;
+    }
+    Mat src;
     int histSize = 255;
     float range[] = { 0, 255 };
     const float* histRange = { range };
-
-    // 计算直方图
     bool uniform = true;
     bool accumulate = false;
-    calcHist(&rgb_planes[0], 1, 0, Mat(), b_hist, 1, &histSize, &histRange, uniform, accumulate);
-    calcHist(&rgb_planes[1], 1, 0, Mat(), g_hist, 1, &histSize, &histRange, uniform, accumulate);
-    calcHist(&rgb_planes[2], 1, 0, Mat(), r_hist, 1, &histSize, &histRange, uniform, accumulate);
 
-    // 直方图归一化>>范围为[0, 1]
-    normalize(r_hist, r_hist, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
-    normalize(g_hist, g_hist, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
-    normalize(b_hist, b_hist, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
+    if (ws == WorkSpace::GRAY)
+    {
+        Mat dst;
+        cvtColor(src_in, src, CV_RGB2GRAY);
+        calcHist(&src, 1, 0, Mat(), dst, 1, &histSize, &histRange, uniform, accumulate);
+
+        if (normalize_flag){
+            normalize(dst, dst, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
+        }
+        if (hist_out != nullptr){
+            hist_out[0] = dst;
+        }
+        if(display_flag){
+            QVector<Mat> temp = {dst};
+            DrawHist("Histogram in GRAY", 400, 300, temp);
+        }
+
+    }
+    else if (ws == WorkSpace::RGB)
+    {
+        src = src_in;
+        std::vector<Mat> channels(3);
+        split(src, channels);
+
+        //声明三个通道的hist数组
+        Mat hist_b, hist_g, hist_r;
+
+        calcHist(&channels[0], 1, 0, Mat(), hist_b, 1, &histSize, &histRange, uniform, accumulate);
+        calcHist(&channels[1], 1, 0, Mat(), hist_g, 1, &histSize, &histRange, uniform, accumulate);
+        calcHist(&channels[2], 1, 0, Mat(), hist_r, 1, &histSize, &histRange, uniform, accumulate);
+
+        if (normalize_flag){
+            normalize(hist_b, hist_b, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
+            normalize(hist_g, hist_g, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
+            normalize(hist_r, hist_r, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
+        }
+        if (hist_out != nullptr){
+            hist_out[0] = hist_b;
+            hist_out[1] = hist_g;
+            hist_out[2] = hist_r;
+        }
+        if(display_flag){
+            QVector<Mat> temp;
+            temp.push_back(hist_b);
+            temp.push_back(hist_g);
+            temp.push_back(hist_r);
+            DrawHist("Histogram in RGB",400, 300, temp);
+        }
+    }
+    else if (ws == WorkSpace::HSV)
+    {
+        cvtColor(src_in, src, CV_RGB2HSV);
+        std::vector<Mat> channels(3);
+        split(src, channels);
+
+        //声明H S通道的hist数组
+        Mat hist_h, hist_s;
+        calcHist(&channels[0], 1, 0, Mat(), hist_h, 1, &histSize, &histRange, uniform, accumulate);
+        calcHist(&channels[1], 1, 0, Mat(), hist_s, 1, &histSize, &histRange, uniform, accumulate);
+
+        if (hist_out != nullptr){
+            int h_bins = 50, s_bins = 60;
+            int histsize[] = { h_bins,s_bins };
+            float h_ranges[] = { 0,180 };
+            float s_ranges[] = { 0,256 };
+            const float *ranges[] = { h_ranges,s_ranges };
+            int channels1[] = { 0,1 };
+
+            Mat hist_src;
+            calcHist(&src, 1, channels1, Mat(), hist_src, 2, histsize, ranges, true, false);
+            normalize(hist_src, hist_src, 0, 1, NORM_MINMAX, -1, Mat());
+            hist_out[0] = hist_src;
+        }
+        if(display_flag){
+            QVector<Mat> temp_Draw;
+            temp_Draw.push_back(hist_h);
+            temp_Draw.push_back(hist_s);
+            DrawHist("Histogram in HSV",400, 300, temp_Draw);
+        }
+    }
 }
 
-// 计算图像直方图 只计算 HS 通道， 不计算 v 通道
-void CompImageHistHSV(const Mat &src, Mat &h_hist, Mat &s_hist)
-{
-    // 分割成3个单通道图像(HSV)
-    std::vector<Mat> HSV_planes;
-    split(src, HSV_planes);
-
-    // 设定bin数目及取值范围
-    int histSize = 255;
-    float range[] = { 0, 255 };
-    const float* histRange = { range };
-
-    // 计算直方图
-    bool uniform = true;
-    bool accumulate = false;
-    calcHist(&HSV_planes[0], 1, 0, Mat(), h_hist, 1, &histSize, &histRange, uniform, accumulate);
-    calcHist(&HSV_planes[1], 1, 0, Mat(), s_hist, 1, &histSize, &histRange, uniform, accumulate);
-
-    // 直方图归一化>>范围为[0, 1]
-    normalize(h_hist, h_hist, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
-    normalize(s_hist, s_hist, 0, 1, NORM_MINMAX, -1/*, Mat()*/);
-}
-
-
-void ImageAlgorithmView::histogramImagesSimilarity(const Mat &leftImage,const Mat &rightImage)
+void ImageAlgorithmView::histogramImagesSimilarity(const Mat &leftImage,const Mat &rightImage, WorkSpace ws)
 {
     if (leftImage.empty() || rightImage.empty()){
         debugMessage("histogramImagesSimilarity image not load !");
@@ -64,45 +142,50 @@ void ImageAlgorithmView::histogramImagesSimilarity(const Mat &leftImage,const Ma
     Mat histLeft[3], histRight[3];
 
     // 计算图像直方图
-    CompImageHist(leftImage, histLeft[0], histLeft[1], histLeft[2]);
-    CompImageHist(rightImage, histRight[0], histRight[1], histRight[2]);
+    CompImageHist(leftImage, ws, histLeft, false, true);
+    CompImageHist(rightImage, ws, histRight, false, true);
 
     double sum[4] = { 0.0 };
-    double results[3][4] = { 0.0 };
-    QString channelName[] = {  "Blue " ,  "Green " ,  "Red "  };
+    double results = { 0.0 };
+    QString channelName[] = {  "H " ,  "S " };
+
+    results = compareHist(histLeft[0], histRight[0], CV_COMP_CORREL);
+    QString messageCorrel = QString(QString("correl similarity::") + QString::number(results*100) + QString("%"));
+    detectMessage(messageCorrel);
 
     // 比较直方图
-    for (int i = 0; i < 3; i++)
-    {
-        // 相关: CV_COMP_CORREL,卡方: CV_COMP_CHISQR,相交: CV_COMP_INTERSECT,巴氏: CV_COMP_BHATTACHARYYA
-        // https://docs.opencv.org/4.5.1/d8/dc8/tutorial_histogram_comparison.html
-        // 相关: CV_COMP_CORREL,卡方: CV_COMP_CHISQR,相交: CV_COMP_INTERSECT,巴氏: CV_COMP_BHATTACHARYYA
-        //相关性比较     (method=cv.HISTCMP_CORREL) 值越大，相关度越高，最大值为1，最小值为0
-        //卡方比较      (method=cv.HISTCMP_CHISQR 值越小，相关度越高，最大值无上界，最小值0
-        //相交比较      (method=CV_COMP_INTERSECT)值越大，相关度越高，最大值为9.455319，最小值为0  ?? 最大值不是9.4
-        //巴氏距离比较   (method=cv.HISTCMP_BHATTACHARYYA) 值越小，相关度越高，最大值为1，最小值为0
-        results[i][0] = compareHist(histLeft[i], histRight[i], CV_COMP_CORREL);
-        results[i][1] = compareHist(histLeft[i], histRight[i], CV_COMP_BHATTACHARYYA);
+//    for (int i = 0; i < 2; i++)
+//    {
+//        // 相关: CV_COMP_CORREL,卡方: CV_COMP_CHISQR,相交: CV_COMP_INTERSECT,巴氏: CV_COMP_BHATTACHARYYA
+//        // https://docs.opencv.org/4.5.1/d8/dc8/tutorial_histogram_comparison.html
+//        // 相关: CV_COMP_CORREL,卡方: CV_COMP_CHISQR,相交: CV_COMP_INTERSECT,巴氏: CV_COMP_BHATTACHARYYA
+//        //相关性比较     (method=cv.HISTCMP_CORREL) 值越大，相关度越高，最大值为1，最小值为0
+//        //卡方比较      (method=cv.HISTCMP_CHISQR 值越小，相关度越高，最大值无上界，最小值0
+//        //相交比较      (method=CV_COMP_INTERSECT)值越大，相关度越高，最大值为9.455319，最小值为0  ?? 最大值不是9.4
+//        //巴氏距离比较   (method=cv.HISTCMP_BHATTACHARYYA) 值越小，相关度越高，最大值为1，最小值为0
 
-        // 计算相似度并归一化到[0, 1]  1为100%相似  0为0%相似
-        results[i][0] = fabs(results[i][0]);
-        results[i][1] = 1 - results[i][1];
+//        results[i][0] = compareHist(histLeft[i], histRight[i], CV_COMP_CORREL);
+////        results[i][1] = compareHist(histLeft[i], histRight[i], CV_COMP_BHATTACHARYYA);
 
-        sum[0] += results[i][0];
-        sum[1] += results[i][1];
+//        // 计算相似度并归一化到[0, 1]  1为100%相似  0为0%相似
+//        results[i][0] = fabs(results[i][0]);
+////        results[i][1] = 1 - results[i][1];
 
-        QString messageCorrel = QString(QString("Channel ") + channelName[i] + QString("correl similarity::") + QString::number(results[i][0]*100)  + QString("%"));
+//        sum[0] += results[i][0];
+////        sum[1] += results[i][1];
 
-        QString messageBhattacharyya = QString(QString("Channel ") + channelName[i] + QString("bhattacharyya similarity::") +  QString::number(results[i][1]*100)  + QString("%"));
+//        QString messageCorrel = QString(QString("Channel ") + channelName[i] + QString("correl similarity::") + QString::number(results[i][0]*100)  + QString("%"));
 
-        detectMessage(messageCorrel);
-        detectMessage(messageBhattacharyya);
-    }
+////        QString messageBhattacharyya = QString(QString("Channel ") + channelName[i] + QString("bhattacharyya similarity::") +  QString::number(results[i][1]*100)  + QString("%"));
 
-    QString messageCorrelResult = QString(QString("Average ") + QString("correl similarity::") + QString::number(sum[0]/3*100)  + QString("%"));
-    QString messageBhattacharyyaResult = QString(QString("Average ") + QString("bhattacharyya similarity::") + QString::number(sum[1]/3*100)  + QString("%"));
-    detectMessage(messageCorrelResult);
-    detectMessage(messageBhattacharyyaResult);
+//        detectMessage(messageCorrel);
+////        detectMessage(messageBhattacharyya);
+//    }
+
+//    QString messageCorrelResult = QString(QString("Average ") + QString("correl similarity::") + QString::number(sum[0]/3*100)  + QString("%"));
+////    QString messageBhattacharyyaResult = QString(QString("Average ") + QString("bhattacharyya similarity::") + QString::number(sum[1]/3*100)  + QString("%"));
+//    detectMessage(messageCorrelResult);
+////    detectMessage(messageBhattacharyyaResult);
 
     debugMessage("histogramImagesSimilarity end !");
 

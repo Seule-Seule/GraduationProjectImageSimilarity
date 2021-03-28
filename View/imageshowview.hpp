@@ -43,6 +43,7 @@ public:
 
 signals:
     void debugMessageSig(QString);
+    void imageChangeSig();
 
 private:
     void initUi();

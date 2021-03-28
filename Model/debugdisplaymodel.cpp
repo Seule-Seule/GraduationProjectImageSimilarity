@@ -3,7 +3,9 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QDateTime>
-#include <QtConcurrent/QtConcurrent>
+#include <QtConcurrent>
+
+#define DEBUG
 
 DebugDisplayModel::DebugDisplayModel(QObject *parent)
 {
@@ -12,19 +14,22 @@ DebugDisplayModel::DebugDisplayModel(QObject *parent)
     m_sqlQuery->exec(QString("create table debug(") + Tool::getDatabaseDebugTableKay() + QString(")"));
 
     qSqlQueryModel = new QSqlQueryModel(this);
-    qSqlQueryModel-> setQuery( QString( "select ") + Tool::getDatabaseDebugTableShowKay() + QString(" from debug"),*BaseModel::getDatabase());
 
-    debugMessage("DebugDisplayModel::Database init ok !");
+    // 避免 启动时 debug 数据过大 卡死界面
+    QtConcurrent::run([=](){
+        qSqlQueryModel-> setQuery( QString( "select ") + Tool::getDatabaseDebugTableShowKay() + QString(" from debug"),*BaseModel::getDatabase());
+    });
 }
 
 void DebugDisplayModel::updataDebugDisplay()
 {
-//    while(qSqlQueryModel->canFetchMore())
-//    {
-//        qSqlQueryModel->fetchMore();
-//    }
-    qSqlQueryModel-> setQuery( QString( "select ") + Tool::getDatabaseDebugTableShowKay() + QString(" from debug"),*BaseModel::getDatabase());
+        qSqlQueryModel-> setQuery( QString( "select ") + Tool::getDatabaseDebugTableShowKay() + QString(" from debug"),*BaseModel::getDatabase());
     emit(valueChange());
+}
+
+void DebugDisplayModel::setProjectId(QString id)
+{
+    m_projectId = id;
 }
 
 void DebugDisplayModel::debugMessage(const QString message)
@@ -49,10 +54,10 @@ void DebugDisplayModel::debugMessage(const QString message)
     QDateTime currentDateTime =QDateTime::currentDateTime();
     QString currentTime = currentDateTime.toString("yyyy-MM-dd hh:mm:ss.zzz");
 
+    QString projectId = m_projectId;
 
-
-    if (!m_sqlQuery->exec("insert into debug(className,time,message) "
-                          "values('"+className+"','"+currentTime+"','"+debugMessage+"')")){
+    if (!m_sqlQuery->exec("insert into debug(string_id,className,time,message) "
+                          "values('"+projectId+"','"+className+"','"+currentTime+"','"+debugMessage+"')")){
         #ifdef DEBUG
                 qDebug() << "DebugDisplayModel::debugMessage " << m_sqlQuery->lastError().text();
         #endif

@@ -89,11 +89,11 @@ void ImageAlgorithm::histogramImagesSimilarity(const Mat &leftImage,const Mat &r
         //相交比较      (method=CV_COMP_INTERSECT)值越大，相关度越高，最大值为9.455319，最小值为0  ?? 最大值不是9.4
         //巴氏距离比较   (method=cv.HISTCMP_BHATTACHARYYA) 值越小，相关度越高，最大值为1，最小值为0
         results[i][0] = compareHist(histLeft[i], histRight[i], CV_COMP_CORREL);
-        results[i][1] = compareHist(histLeft[i], histRight[i], CV_COMP_BHATTACHARYYA);
+        //results[i][1] = compareHist(histLeft[i], histRight[i], CV_COMP_BHATTACHARYYA);
 
         // 计算相似度并归一化到[0, 1]  1为100%相似  0为0%相似
         results[i][0] = fabs(results[i][0]);
-        results[i][1] = 1 - results[i][1];
+        //results[i][1] = 1 - results[i][1];
 
         sum[0] += results[i][0];
         sum[1] += results[i][1];
@@ -227,7 +227,7 @@ void ImageAlgorithm::histogramBuild(const Mat &src)
 
     if (src.channels() == 3){
         //分割成三通道图像
-        std::vector<Mat> channels;
+        std::vector<Mat> channels(3);
         split(src, channels);
 
         //设定bin数目

@@ -24,11 +24,13 @@ public:
 signals:
     void debugMessageSig(QString);
     void detectMessageSig(QString);
+    void projectIdSig(QString);
 
 public slots:
     void update();
     void debugMessage(QString message);
     void detectMessage(QString message);
+
 
 private slots:
     void initUi();
@@ -40,6 +42,7 @@ private:
     Ui::MessageBoxView *ui;
     bool m_messageHide;
     QSize  m_widgetMessageSize;
+    PropertyBuilderByName(QString , ProjectId, private);
 };
 
 #endif // MESSAGEBOXVIEW_HPP

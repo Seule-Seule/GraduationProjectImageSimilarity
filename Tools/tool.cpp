@@ -58,9 +58,10 @@ QString Tool::getDatabaseDebugTableShowKay()
 
 QString Tool::getDatabaseDetectTableKay()
 {
-    return QString("date,time,message,value,string_id, \
-                   left_image_path,left_image_name,left_image_po, \
-                   right_image_path,right_image_name,right_image_po");
+    return QString("string_id,   \
+                   date,time,message,value, \
+                   left_image_path,left_image_name, \
+                   right_image_path,right_image_name");
 }
 
 QString Tool::getDatabaseDetectTableShowKay()

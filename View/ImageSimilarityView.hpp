@@ -35,24 +35,29 @@ public:
 
 signals:
     void debugMessageSig(QString);
+    void projectIdSig(QString);
+
 
 private:
     void initUi();
     void debugMessage(QString message);
 
 public:
-    void update();
+
 
 private slots:
+    void update();
     void on_ac_Save_triggered();
     void on_ac_Histogram_triggered();
     void on_ac_HistogramSub_triggered();
     void on_ac_Exit_triggered();
     void on_ac_About_triggered();
     void on_ac_About_Contents_triggered();
+    void on_ac_Left_Histogram_triggered();
 
 private:
     Ui::ImageSimilarityView *ui;
+    PropertyBuilderByName(bool, HistogramFlag, private);
     PointerPropertyBuilderByName(ImageShowView, leftImage, private);
     PointerPropertyBuilderByName(ImageShowView, rightImage, private);
     PointerPropertyBuilderByName(MessageBoxView, MessageView, private);
