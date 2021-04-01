@@ -1,6 +1,6 @@
 # 利用图像原始全局直方图进行相似性判别
 
-## 同一幅图像，不同分辨率情况下相似度检验 
+## [同一幅图像，不同分辨率情况下相似度检验](1颜色直方图同一图像不同分辨率.csv)
 
 -  图片SardiniaHawkMoth_ZH-CN3672906054  
 
@@ -73,7 +73,76 @@
 
 ## 图像不同但相似的同分辨率和不同分辨率
 
+- [图像不同但相似的同分辨率](2颜色直方图图像不同但相似同分辨率.csv)
 
+|编号|图片名|分辨率|相似性检验结果|
+|:-:|:-:|:-:|:-:|
+|1|BeaujolaisRegion_ZH-CN1585928268	|1920x1080|0.969256|
+|2|BeaujolaisRegion_ZH-CN1585928268	|1366x768|0.97246|
+|3|BeaujolaisRegion_ZH-CN1585928268	|1280x768|0.975104|
+|4|BeaujolaisRegion_ZH-CN1585928268	|1024x768|0.974003|
+|5|BeaujolaisRegion_ZH-CN1585928268	|800x600|    0.982357|
+|6|BeaujolaisRegion_ZH-CN1585928268	|800x480|    0.985964|
+|7|BeaujolaisRegion_ZH-CN1585928268	|768x1280|0.982059|
+|8|BeaujolaisRegion_ZH-CN1585928268	|720x1280|0.982247|
+|9|BeaujolaisRegion_ZH-CN1585928268	|640x480|    0.929717|
+|10|BeaujolaisRegion_ZH-CN1585928268|	480x800|    0.949163|
+|11|BeaujolaisRegion_ZH-CN1585928268|	400x240|    0.955246|
+|12|BeaujolaisRegion_ZH-CN1585928268|	320x240|    0.914007|
+|13|BeaujolaisRegion_ZH-CN1585928268|	240x320|    0.924157|
+  
+|编号|原图|相似图|
+|:-:|:-:|:-:|
+|1|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1920x1080_base.jpg" width="400" height='300' title='1920x1080'/>1920x1080|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1920x1080_test.jpg" width="400" height='300' title='1920x1080'/>1920x1080|
+|2|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1366x768_base.jpg" width="400" height='300' title='1366x768'/>1366x768|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1366x768_test.jpg" width="400" height='300' title='1366x768'/>1366x768|
+|3|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1280x768_base.jpg" width="400" height='300' title='1280x768'/>1280x768|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1280x768_test.jpg" width="400" height='300' title='1280x768'/>1280x768|
+|4|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1024x768_base.jpg" width="400" height='300' title='1024x768'/>1024x768|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_1024x768_test.jpg" width="400" height='300' title='1024x768'/>1024x768|
+|5|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_800x600_base.jpg" width="400" height='300' title='800x600'/>800x600|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_800x600_test.jpg" width="400" height='300' title='800x600'/>800x600|
+|6|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_800x480_base.jpg" width="400" height='300' title='800x480'/>800x480|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_800x480_test.jpg" width="400" height='300' title='800x480'/>800x480|
+|7|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|8|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_720x1280_base.jpg" width="400" height='300' title='720x1280'/>720x1280|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_720x1280_test.jpg" width="400" height='300' title='720x1280'/>720x1280|
+|9|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_640x480_base.jpg" width="400" height='300' title='640x480'/>640x480|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_640x480_test.jpg" width="400" height='300' title='640x480'/>640x480|
+|10|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_480x800_base.jpg" width="400" height='300' title='480x800'/>480x800|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_480x800_test.jpg" width="400" height='300' title='480x800'/>480x800|
+|11|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_400x240_base.jpg" width="400" height='300' title='400x240'/>400x240|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_400x240_test.jpg" width="400" height='300' title='400x240'/>400x240|
+|12|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_320x240_base.jpg" width="400" height='300' title='320x240'/>320x240|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_320x240_test.jpg" width="400" height='300' title='320x240'/>320x240|
+|13|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_240x320_base.jpg" width="400" height='300' title='240x320'/>240x320|<img src="images/BeaujolaisRegion_ZH-CN1585928268/BeaujolaisRegion_ZH-CN1585928268_240x320_test.jpg" width="400" height='300' title='240x320'/>240x320|
+
+- [图像不同但相似的不同分辨率](3颜色直方图图像不同但相似不同分辨率.csv)
+
+|编号|图片名|分辨率|相似图分辨率|相似性检验结果|
+|:-:|:-:|:-:|:-:|:-:|
+|1|GodsGarden_ZH-CN3317703606     |768x1280	|1920x1080	|0.697619|
+|2|GodsGarden_ZH-CN3317703606     |768x1280	|1366x768	|0.64564 |
+|3|GodsGarden_ZH-CN3317703606     |768x1280	|1280x768	|0.63251 |
+|4|GodsGarden_ZH-CN3317703606     |768x1280	|1024x768	|0.734612|
+|5|GodsGarden_ZH-CN3317703606     |768x1280	|800x600	|0.731806|
+|6|GodsGarden_ZH-CN3317703606     |768x1280	|800x480	|0.592676|
+|7|GodsGarden_ZH-CN3317703606     |768x1280	|768x1280	|0.953649|
+|8|GodsGarden_ZH-CN3317703606     |768x1280	|720x1280	|0.957368|
+|9|GodsGarden_ZH-CN3317703606     |768x1280	|640x480	|0.703952|
+|10|GodsGarden_ZH-CN3317703606     |768x1280	|480x800	|0.852223|
+|11|GodsGarden_ZH-CN3317703606     |768x1280	|400x240	|0.51727 |
+|12|GodsGarden_ZH-CN3317703606     |768x1280	|320x240	|0.572227|
+|13|GodsGarden_ZH-CN3317703606     |768x1280	|240x320	|0.643358|
+
+|编号|原图|相似图|
+|:-:|:-:|:-:|
+|1|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_1920x1080_test.jpg" width="400" height='300' title='1920x1080'/>1920x1080|
+|2|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_1366x768_test.jpg" width="400" height='300' title='1366x768'/>1366x768|
+|3|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_1280x768_test.jpg" width="400" height='300' title='1280x768'/>1280x768|
+|4|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_1024x768_test.jpg" width="400" height='300' title='1024x768'/>1024x768|
+|5|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_800x600_test.jpg" width="400" height='300' title='800x600'/>800x600|
+|6|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_800x480_test.jpg" width="400" height='300' title='800x480'/>800x480|
+|7|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_1920x1080_test.jpg" width="400" height='300' title='1920x1080'/>1920x1080|
+|8|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_720x1280_test.jpg" width="400" height='300' title='720x1280'/>720x1280|
+|9|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_640x480_test.jpg" width="400" height='300' title='640x480'/>640x480|
+|10|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_480x800_test.jpg" width="400" height='300' title='480x800'/>480x800|
+|11|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_400x240_test.jpg" width="400" height='300' title='400x240'/>400x240|
+|12|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_320x240_test.jpg" width="400" height='300' title='320x240'/>320x240|
+|13|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/GodsGarden_ZH-CN3317703606/GodsGarden_ZH-CN3317703606_240x320_test.jpg" width="400" height='300' title='240x320'/>240x320|
+
+结论：图像不同但相似的图片利用图像原始全局直方图进行相似性判别时，同分辨率下相似度检测结果准确性较高；不同分辨率下，相似度检测结果准确性低。
 
 ## 图像不同且不相似的同分辨率和不同分辨率
+
 
