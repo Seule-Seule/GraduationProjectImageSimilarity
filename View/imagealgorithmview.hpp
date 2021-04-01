@@ -30,12 +30,12 @@ private :
     void update();
     void debugMessage(QString message);
     void detectMessage(QString message);
+    void DrawHist(String window_name, int width, int height, QVector<Mat> &hist_in);
 
 public:
-    void DrawHist(String window_name, int width, int height, QVector<Mat> &hist_in);
-    void CompImageHist(const Mat &src_in,WorkSpace ws,
-                       Mat * hist_out = nullptr,bool display_flag = false, bool normalize_flag = false);
-    void histogramImagesSimilarity(const Mat &leftImage,const Mat &rightImage, WorkSpace ws = WorkSpace::HSV);
+    void CompImageHist(const Mat &src_in,WorkSpace ws, int id);
+    void HistogramEqualization(const Mat &leftImage,const Mat &rightImage);
+    void AptiveHistogramEqualization(const Mat &leftImage,const Mat &rightImage);
 
 };
 

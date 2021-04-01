@@ -113,6 +113,7 @@ void ImageSimilarityView::update()
     }
 
     m_HistogramFlag = false;
+    m_SubHistogramFlag = false;
 
     emit(projectIdSig(ProjectId));
 }
@@ -143,20 +144,26 @@ void ImageSimilarityView::on_ac_Save_triggered()
 
 void ImageSimilarityView::on_ac_Histogram_triggered()
 {
-
     if (m_HistogramFlag){
         QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Histogram Images Similarity Is Complete !")));
         return;
     }
     m_HistogramFlag = true;
-    QtConcurrent::run([=](){m_ImageAlgorithm->histogramImagesSimilarity( \
+    QtConcurrent::run([=](){m_ImageAlgorithm->HistogramEqualization(
         m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
         });
 }
 
 void ImageSimilarityView::on_ac_HistogramSub_triggered()
 {
-
+    if (m_SubHistogramFlag){
+        QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Aptive Histogram Images Similarity Is Complete !")));
+        return;
+    }
+    m_SubHistogramFlag = true;
+    QtConcurrent::run([=](){m_ImageAlgorithm->AptiveHistogramEqualization(
+        m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+    });
 }
 
 void ImageSimilarityView::on_ac_Exit_triggered()
@@ -178,7 +185,14 @@ void ImageSimilarityView::on_ac_About_Contents_triggered()
 
 void ImageSimilarityView::on_ac_Left_Histogram_triggered()
 {
-    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::GRAY, nullptr, true);
-    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::RGB, nullptr, true);
-    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::HSV, nullptr, true);
+//    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::GRAY, 1);
+//    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::RGB, 1);
+    m_ImageAlgorithm->CompImageHist(m_leftImage->getImage()->getImageMat(), ImageAlgorithmView::HSV, 1);
+}
+
+void ImageSimilarityView::on_ac_Right_Histogram_triggered()
+{
+//    m_ImageAlgorithm->CompImageHist(m_rightImage->getImage()->getImageMat(), ImageAlgorithmView::GRAY, 0);
+//    m_ImageAlgorithm->CompImageHist(m_rightImage->getImage()->getImageMat(), ImageAlgorithmView::RGB, 0);
+    m_ImageAlgorithm->CompImageHist(m_rightImage->getImage()->getImageMat(), ImageAlgorithmView::HSV, 0);
 }

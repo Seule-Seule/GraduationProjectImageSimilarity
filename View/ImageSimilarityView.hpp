@@ -55,9 +55,12 @@ private slots:
     void on_ac_About_Contents_triggered();
     void on_ac_Left_Histogram_triggered();
 
+    void on_ac_Right_Histogram_triggered();
+
 private:
     Ui::ImageSimilarityView *ui;
     PropertyBuilderByName(bool, HistogramFlag, private);
+    PropertyBuilderByName(bool, SubHistogramFlag, private);
     PointerPropertyBuilderByName(ImageShowView, leftImage, private);
     PointerPropertyBuilderByName(ImageShowView, rightImage, private);
     PointerPropertyBuilderByName(MessageBoxView, MessageView, private);
