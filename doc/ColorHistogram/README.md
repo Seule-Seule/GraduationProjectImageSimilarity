@@ -1,5 +1,17 @@
 # 利用图像原始全局直方图进行相似性判别
 
+## 目录
+- [利用图像原始全局直方图进行相似性判别](#利用图像原始全局直方图进行相似性判别)
+  - [目录](#目录)
+  - [实验代码](#实验代码)
+  - [同一幅图像，不同分辨率情况下相似度检验](#同一幅图像不同分辨率情况下相似度检验)
+  - [图像不同但相似的同分辨率和不同分辨率](#图像不同但相似的同分辨率和不同分辨率)
+  - [图像不同且不相似的同分辨率和不同分辨率](#图像不同且不相似的同分辨率和不同分辨率)
+
+## 实验代码
+
+[@实验代码](../ImageSimilarityExperiment/ColorHistogram.cpp)
+
 ## [同一幅图像，不同分辨率情况下相似度检验](1颜色直方图同一图像不同分辨率.csv)
 
 -  图片SardiniaHawkMoth_ZH-CN3672906054  
@@ -143,6 +155,35 @@
 
 结论：图像不同但相似的图片利用图像原始全局直方图进行相似性判别时，同分辨率下相似度检测结果准确性较高；不同分辨率下，相似度检测结果准确性低。
 
-## 图像不同且不相似的同分辨率和不同分辨率
+## [图像不同且不相似的同分辨率和不同分辨率](4颜色直方图不同图像不同分辨率和相同分辨率.csv)
+
+|编号|图片1|图片2|分辨率1|分辨率2|相似性检验结果|
+|:-:|:-:|:-:|:-:|:-:|:-:|
+|1|PontFawr_ZH-CN1780190468	            |SynchronousFireflies_ZH-CN6323931412	|768x1280	|768x1280	|0.00634463|
+|2|LionSurfing_ZH-CN7369892268	        |BaronLakes_ZH-CN7541190370          	|768x1280	|768x1280	|-0.00727522|
+|3|WobblyBridge_ZH-CN7751845685	        |GriboyedovCanal_ZH-CN7887366015 	    |768x1280	|768x1280	|0.109737|
+|4|StStephens_ZH-CN9373191410	        |Havasupai_ZH-CN0016003195              |768x1280	|768x1280	|0.155889|
+|5|AdansoniaGrandidieri_ZH-CN1154912052	|MtBaldoSantuario_ZH-CN2301293454	    |768x1280	|768x1280	|0.0719352|
+|6|PontFawr_ZH-CN1780190468	            |SynchronousFireflies_ZH-CN6323931412	|768x1280	|320x240	|-0.00261828|
+|7|LionSurfing_ZH-CN7369892268	        |BaronLakes_ZH-CN7541190370	            |768x1280	|1280x768	|-0.0122369|
+|8|WobblyBridge_ZH-CN7751845685	        |GriboyedovCanal_ZH-CN7887366015	    |768x1280	|1920x1080	|0.088117|
+|9|StStephens_ZH-CN9373191410	        |Havasupai_ZH-CN0016003195	            |768x1280	|240x320	|0.193342|
+|10|AdansoniaGrandidieri_ZH-CN1154912052|MtBaldoSantuario_ZH-CN2301293454	    |768x1280	|720x1280	|0.070701|
+
+|编号|图片1|图片2|
+|:-:|:-:|:-:|
+|1|<img src="images/ColorHistTest4/PontFawr_ZH-CN1780190468_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/SynchronousFireflies_ZH-CN6323931412_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|2|<img src="images/ColorHistTest4/LionSurfing_ZH-CN7369892268_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/BaronLakes_ZH-CN7541190370_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|3|<img src="images/ColorHistTest4/WobblyBridge_ZH-CN7751845685_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/GriboyedovCanal_ZH-CN7887366015_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|4|<img src="images/ColorHistTest4/StStephens_ZH-CN9373191410_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/Havasupai_ZH-CN0016003195_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|5|<img src="images/ColorHistTest4/AdansoniaGrandidieri_ZH-CN1154912052_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/MtBaldoSantuario_ZH-CN2301293454_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|6|<img src="images/ColorHistTest4/PontFawr_ZH-CN1780190468_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/SynchronousFireflies_ZH-CN6323931412_768x1280_test.jpg" width="400" height='300' title='768x1280'/>768x1280|
+|7|<img src="images/ColorHistTest4/LionSurfing_ZH-CN7369892268_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/BaronLakes_ZH-CN7541190370_1280x768_test.jpg" width="400" height='300' title='1280x768'/>1280x768|
+|8|<img src="images/ColorHistTest4/WobblyBridge_ZH-CN7751845685_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/GriboyedovCanal_ZH-CN7887366015_1920x1080_test.jpg" width="400" height='300' title='1920x1080'/>1920x1080|
+|9|<img src="images/ColorHistTest4/StStephens_ZH-CN9373191410_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/Havasupai_ZH-CN0016003195_240x320_test.jpg" width="400" height='300' title='240x320'/>240x320|
+|10|<img src="images/ColorHistTest4/AdansoniaGrandidieri_ZH-CN1154912052_768x1280_base.jpg" width="400" height='300' title='768x1280'/>768x1280|<img src="images/ColorHistTest4/MtBaldoSantuario_ZH-CN2301293454_720x1280_test.jpg" width="400" height='300' title='720x1280'/>720x1280|
+
+结论：图像不同且不相似的同分辨率和不同分辨率的图像利用图像原始全局直方图进行相似性判别，无论分辨率是否相同，相似性检验结果都很低。
+
 
 
