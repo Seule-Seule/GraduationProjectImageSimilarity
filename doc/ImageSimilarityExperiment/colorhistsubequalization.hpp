@@ -1,0 +1,8 @@
+﻿#ifndef COLORHISTSUBEQUALIZATION_HPP
+#define COLORHISTSUBEQUALIZATION_HPP
+
+void ColorHistSubEqualizationTest1();
+
+
+
+#endif // COLORHISTSUBEQUALIZATION_HPP
