@@ -13,7 +13,9 @@ SOURCES += \
         colorhistsubequalization.cpp \
         hash.cpp \
         imageprocess.cpp \
-        main.cpp
+        main.cpp \
+        sift.cpp \
+        testimageprotocol.cpp
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -37,4 +39,6 @@ HEADERS += \
     colorhistogramequalization.hpp \
     colorhistsubequalization.hpp \
     hash.hpp \
-    imageprocess.hpp
+    imageprocess.hpp \
+    sift.hpp \
+    testimageprotocol.hpp

@@ -147,31 +147,60 @@ void DrawHist(String window_name, int width, int height, QVector<Mat> &hist_in, 
         imwrite(SavePath, hist_mage);
 }
 
-void CompImageHist(const Mat &src, string SavePath)
+void CompImageHist(const Mat &src, string SavePath, bool norma)
 {
     if (src.empty()){
         return;
     }
-    String position;
+    if(src.channels() == 3)
+    {
+        String position;
 
-    int histSize = 255;
-    float range[] = { 0, 255 };
-    const float* histRange = { range };
-    bool uniform = true;
-    bool accumulate = false;
+        int histSize = 255;
+        float range[] = { 0, 255 };
+        const float* histRange = { range };
+        bool uniform = true;
+        bool accumulate = false;
 
-    std::vector<Mat> channels(3);
-    split(src, channels);
+        std::vector<Mat> channels(3);
+        split(src, channels);
 
-    //声明H S通道的hist数组
-    Mat hist_h, hist_s;
-    calcHist(&channels[0], 1, 0, Mat(), hist_h, 1, &histSize, &histRange, uniform, accumulate);
-    calcHist(&channels[1], 1, 0, Mat(), hist_s, 1, &histSize, &histRange, uniform, accumulate);
+        //声明H S通道的hist数组
+        Mat hist_h, hist_s;
+        calcHist(&channels[0], 1, 0, Mat(), hist_h, 1, &histSize, &histRange, uniform, accumulate);
+        calcHist(&channels[1], 1, 0, Mat(), hist_s, 1, &histSize, &histRange, uniform, accumulate);
 
-    QVector<Mat> temp_Draw;
-    temp_Draw.push_back(hist_h);
-    temp_Draw.push_back(hist_s);
-    DrawHist(position + String("Histogram in HSV"),400, 300, temp_Draw, SavePath);
+        if(norma)
+        {
+            // 全局归一化
+            normalize(hist_h, hist_h, 0, 1, NORM_MINMAX, -1, Mat());
+            normalize(hist_s, hist_s, 0, 1, NORM_MINMAX, -1, Mat());
+        }
+
+        QVector<Mat> temp_Draw;
+        temp_Draw.push_back(hist_h);
+        temp_Draw.push_back(hist_s);
+        DrawHist(position + String("Histogram in HSV"),400, 300, temp_Draw, SavePath);
+    }
+    else if(src.channels() == 1)
+    {
+        String position;
+
+        Mat hist;
+        float hranges[] = {0, 256};
+        const float *ranges[] = {hranges};   // 这里需要为const类型
+        int size = 256;
+        int channels = 0;
+        calcHist(&src, 1, &channels, Mat(), hist, 1, &size, ranges, true, false);
+        if(norma)
+        {
+            // 全局归一化
+            normalize(hist, hist, 0, 1, NORM_MINMAX, -1, Mat());
+        }
+        QVector<Mat> temp_Draw;
+        temp_Draw.push_back(hist);
+        DrawHist(position + String("Histogram in HSV"),400, 300, temp_Draw, SavePath);
+    }
 }
 
 

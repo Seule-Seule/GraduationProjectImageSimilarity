@@ -41,8 +41,7 @@ signals:
 private:
     void initUi();
     void debugMessage(QString message);
-
-public:
+    bool imageLoad();
 
 
 private slots:
@@ -54,13 +53,26 @@ private slots:
     void on_ac_About_triggered();
     void on_ac_About_Contents_triggered();
     void on_ac_Left_Histogram_triggered();
-
     void on_ac_Right_Histogram_triggered();
+    void on_ac_Calculate_triggered();
+    void on_ac_Sub_Normal_CHist_triggered();
+    void on_ac_SIFT_triggered();
+    void on_ac_aHash_triggered();
+    void on_ac_pHash_triggered();
+    void on_ac_dHash_triggered();
 
 private:
     Ui::ImageSimilarityView *ui;
     PropertyBuilderByName(bool, HistogramFlag, private);
+    PropertyBuilderByName(bool, NormalHistogramFlag, private);
     PropertyBuilderByName(bool, SubHistogramFlag, private);
+
+    PropertyBuilderByName(bool, SIFTFlag, private);
+
+    PropertyBuilderByName(bool, aHashFlag, private);
+    PropertyBuilderByName(bool, pHashFlag, private);
+    PropertyBuilderByName(bool, dHashFlag, private);
+
     PointerPropertyBuilderByName(ImageShowView, leftImage, private);
     PointerPropertyBuilderByName(ImageShowView, rightImage, private);
     PointerPropertyBuilderByName(MessageBoxView, MessageView, private);

@@ -23,40 +23,68 @@ double ColorHistEqualization(Mat &leftImage, Mat &rightImage, string leftSavePat
     //qDebug() << ("histogramImagesSimilarity begin !");
 
     Mat leftSrc, rightSrc;
-    cvtColor(leftImage, leftSrc, CV_RGB2HSV);
-    cvtColor(rightImage, rightSrc, CV_RGB2HSV);
-
-    int h_bins = 50, s_bins = 60;
-    int histsize[] = { h_bins,s_bins };
-    float h_ranges[] = { 0,180 };
-    float s_ranges[] = { 0,256 };
-    const float *ranges[] = { h_ranges,s_ranges };
-    int channels1[] = { 0,1 };
+    if(leftImage.channels() == 1 && rightImage.channels() == 1){
+        leftSrc = leftImage;
+        rightSrc = rightImage;
+    }
+    else if(leftImage.channels() == 3 && rightImage.channels() == 3){
+        cvtColor(leftImage, leftSrc, CV_RGB2HSV);
+        cvtColor(rightImage, rightSrc, CV_RGB2HSV);
+    }
 
     // 计算直方图
     Mat histLeft, histRight;
-    calcHist(&leftSrc, 1, channels1, Mat(), histLeft, 2, histsize, ranges, true, false);
-    calcHist(&rightSrc, 1, channels1, Mat(), histRight, 2, histsize, ranges, true, false);
-
-    // 直方图保存
-    string histLeftSavePath = splitString(leftSavePath, ".")[0] + string("_hist.jpg");
-    string histRightSavePath = splitString(rightSavePath, ".")[0] + string("_hist.jpg");
-    CompImageHist(leftSrc, histLeftSavePath);
-    CompImageHist(rightSrc, histRightSavePath);
+    if(leftImage.channels() == 1 && rightImage.channels() == 1){
+        float hranges[] = {0, 256};
+        const float *ranges[] = {hranges};   // 这里需要为const类型
+        int size = 256;
+        int channels = 0;
+        calcHist(&leftSrc, 1, &channels, Mat(), histLeft, 1, &size, ranges, true, false);
+        calcHist(&rightSrc, 1, &channels, Mat(), histRight, 1, &size, ranges, true, false);
+    }
+    else if(leftImage.channels() == 3 && rightImage.channels() == 3){
+        int h_bins = 50, s_bins = 60;
+        int histsize[] = { h_bins,s_bins };
+        float h_ranges[] = { 0,180 };
+        float s_ranges[] = { 0,256 };
+        const float *ranges[] = { h_ranges,s_ranges };
+        int channels3[] = { 0,1 };
+        calcHist(&leftSrc, 1, channels3, Mat(), histLeft, 1, histsize, ranges, true, false);
+        calcHist(&rightSrc, 1, channels3, Mat(), histRight, 1, histsize, ranges, true, false);
+    }
 
     // 全局归一化
-    normalize(histLeft, histLeft, 0, 1, NORM_MINMAX, -1, Mat());
+    normalize(histLeft, histLeft, 0, leftSrc.rows, NORM_MINMAX, -1, Mat());
+    normalize(histRight, histRight, 0, rightSrc.rows, NORM_MINMAX, -1, Mat());
+
+    // 保存直方图
+    std::vector<std::string> retL = splitString(leftSavePath, ".");
+    std::vector<std::string> retR = splitString(rightSavePath, ".");
+    if(retL.size() > 2)
+    {
+        string histLeftSavePath =  retL[0]+ string("_hist.jpg");
+        string histRightSavePath = retR[0] + string("_hist.jpg");
+        CompImageHist(leftSrc, histLeftSavePath, true);
+        CompImageHist(rightSrc, histRightSavePath, true);
+    }
+    else
+    {
+        string histLeftSavePath =  string(".") + retL[0]+ string("_hist.jpg");
+        string histRightSavePath = string(".") + retR[0] + string("_hist.jpg");
+        CompImageHist(leftSrc, histLeftSavePath, true);
+        CompImageHist(rightSrc, histRightSavePath, true);
+    }
 
     // 计算相似性
     double result =  0.0 ;
     result = compareHist(histLeft, histRight, CV_COMP_CORREL);
-    QString messageCorrel = QString(QString("Histogram Images Similarity::") + QString::number(result));
+    QString messageCorrel = QString(QString("ColorHistEqualization Images Similarity::") + QString::number(result));
     qDebug() << (messageCorrel);
     //qDebug() << ("histogramImagesSimilarity end !");
 
-//    // 写入结果
-//    putText(leftSrc, std::to_string(result), Point(100, 100), CV_FONT_HERSHEY_COMPLEX, 1, Scalar(0, 0, 255),2, LINE_AA);
-//    putText(rightSrc, std::to_string(result), Point(100, 100), CV_FONT_HERSHEY_COMPLEX, 1, Scalar(0, 0, 255),2, LINE_AA);
+    //    // 写入结果  暂时不写 整理数据时图片缩放写入的字体会变形
+    //    putText(leftSrc, std::to_string(result), Point(100, 100), CV_FONT_HERSHEY_COMPLEX, 1, Scalar(0, 0, 255),2, LINE_AA);
+    //    putText(rightSrc, std::to_string(result), Point(100, 100), CV_FONT_HERSHEY_COMPLEX, 1, Scalar(0, 0, 255),2, LINE_AA);
 
     if (_access(leftSavePath.c_str(), 0) == -1)
         imwrite(leftSavePath, leftSrc);

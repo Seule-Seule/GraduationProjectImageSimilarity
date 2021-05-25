@@ -19,6 +19,6 @@ void getFiles(string path, vector <string> & files);
 vector<string> splitString(const std::string &str, const std::string &pattern);
 void getInfo(std::string file, map<int, std::string> &info);
 void DrawHist(String window_name, int width, int height, QVector<Mat> &hist_in, string SavePath);
-void CompImageHist(const Mat &src, string SavePath);
+void CompImageHist(const Mat &src, string SavePath, bool normalize=false);
 
 #endif // IMAGEPROCESS_HPP

@@ -22,6 +22,13 @@ public:
         GRAY
     };
 
+    enum HashType
+    {
+        eAHASH,
+        ePHASH,
+        eDHASH
+    };
+
 signals:
     void debugMessageSig(QString);
     void detectMessageSig(QString);
@@ -31,11 +38,25 @@ private :
     void debugMessage(QString message);
     void detectMessage(QString message);
     void DrawHist(String window_name, int width, int height, QVector<Mat> &hist_in);
+    void splitMat(const Mat &srcImg,int m,int n, QVector<Mat> &ceilImg);
 
+    int HanmingDistance(QString &str1, QString &str2);
+    QString aHashValue(const Mat& src);
+    QString pHashValue(const Mat& src);
+    QString dHashValue(const Mat& src);
 public:
+
+    // 直方图
     void CompImageHist(const Mat &src_in,WorkSpace ws, int id);
-    void HistogramEqualization(const Mat &leftImage,const Mat &rightImage);
-    void AptiveHistogramEqualization(const Mat &leftImage,const Mat &rightImage);
+    void ColorHistogram(const Mat &leftImage,const Mat &rightImage);
+    double NormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, bool sengMessage = true);
+    void SubNormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, int scale = 3);
+
+    // 哈希算法
+    double HASH(HashType type, const Mat &leftImage, const Mat &rightImage);
+
+    // sift
+    double SIFT(const Mat &leftImage, const Mat &rightImage);
 
 };
 

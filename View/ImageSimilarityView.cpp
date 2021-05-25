@@ -39,6 +39,7 @@ void ImageSimilarityView::initUi()
     ui->ac_Exit->setIcon( Awesome::getInstace()->icon( fa::times,  Awesome::getInstace()->options) );
     ui->ac_About_Contents->setIcon( Awesome::getInstace()->icon( fa::alignleft,  Awesome::getInstace()->options) );
     ui->ac_About->setIcon( Awesome::getInstace()->icon( fa::exclamationcircle,  Awesome::getInstace()->options) );
+    ui->ac_Calculate->setIcon( Awesome::getInstace()->icon( fa::gear,  Awesome::getInstace()->options) );
 
     // 按钮提示
     ui->ac_Exit->setStatusTip(tr("Exit system."));
@@ -47,6 +48,7 @@ void ImageSimilarityView::initUi()
     ui->ac_HistogramSub->setStatusTip(tr("Use aptive histogram equalization to detect image similarity."));
     ui->ac_About->setStatusTip(tr("About this software."));
     ui->ac_About_Contents->setStatusTip(tr("Software help page index."));
+    ui->ac_Calculate->setStatusTip(tr("Automatic calculation of similarity."));
 
     // 背景
     Tool::setUiBackgroundColor(this, Awesome::getInstace()->getUiBackgroundColor());
@@ -81,9 +83,9 @@ void ImageSimilarityView::initUi()
     connect(this, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     connect(m_leftImage, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
     connect(m_rightImage, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
-    connect(m_ImageAlgorithm, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)));
+    connect(m_ImageAlgorithm, SIGNAL(debugMessageSig(QString)), m_MessageView, SLOT(debugMessage(QString)), Qt::DirectConnection);
 
-    connect(m_ImageAlgorithm, SIGNAL(detectMessageSig(QString)), m_MessageView, SLOT(detectMessage(QString)));
+    connect(m_ImageAlgorithm, SIGNAL(detectMessageSig(QString)), m_MessageView, SLOT(detectMessage(QString)), Qt::DirectConnection);
 
     // 更新project id
     connect(m_leftImage, SIGNAL(imageChangeSig()), this, SLOT(update()));
@@ -114,6 +116,11 @@ void ImageSimilarityView::update()
 
     m_HistogramFlag = false;
     m_SubHistogramFlag = false;
+    m_NormalHistogramFlag = false;
+    m_SIFTFlag = false;
+    m_aHashFlag = false;
+    m_pHashFlag = false;
+    m_dHashFlag = false;
 
     emit(projectIdSig(ProjectId));
 }
@@ -144,26 +151,49 @@ void ImageSimilarityView::on_ac_Save_triggered()
 
 void ImageSimilarityView::on_ac_Histogram_triggered()
 {
-    if (m_HistogramFlag){
-        QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Histogram Images Similarity Is Complete !")));
-        return;
-    }
-    m_HistogramFlag = true;
-    QtConcurrent::run([=](){m_ImageAlgorithm->HistogramEqualization(
-        m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+    if(imageLoad())
+    {
+        if (m_HistogramFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Color Histogram Images Similarity Is Complete !")));
+            return;
+        }
+
+        auto f = QtConcurrent::run([=](){
+            m_ImageAlgorithm->ColorHistogram(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_HistogramFlag = true;
         });
+    }
 }
 
 void ImageSimilarityView::on_ac_HistogramSub_triggered()
 {
-    if (m_SubHistogramFlag){
-        QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Aptive Histogram Images Similarity Is Complete !")));
-        return;
+    if(imageLoad())
+    {
+        if (m_NormalHistogramFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Normalized Color Histogram Images Similarity Is Complete !")));
+            return;
+        }
+
+        QtConcurrent::run([=](){m_ImageAlgorithm->NormalizedColorHistogram(
+                m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_NormalHistogramFlag = true;
+        });
     }
-    m_SubHistogramFlag = true;
-    QtConcurrent::run([=](){m_ImageAlgorithm->AptiveHistogramEqualization(
-        m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
-    });
+}
+
+bool ImageSimilarityView::imageLoad()
+{
+    if(m_leftImage->getImage()->getImageMat().empty())
+    {
+        debugMessage(QString("Left image is empty !") );
+        return false;
+    }
+    if(m_leftImage->getImage()->getImageMat().empty())
+    {
+        debugMessage(QString("Right image is empty !") );
+        return false;
+    }
+    return true;
 }
 
 void ImageSimilarityView::on_ac_Exit_triggered()
@@ -195,4 +225,84 @@ void ImageSimilarityView::on_ac_Right_Histogram_triggered()
 //    m_ImageAlgorithm->CompImageHist(m_rightImage->getImage()->getImageMat(), ImageAlgorithmView::GRAY, 0);
 //    m_ImageAlgorithm->CompImageHist(m_rightImage->getImage()->getImageMat(), ImageAlgorithmView::RGB, 0);
     m_ImageAlgorithm->CompImageHist(m_rightImage->getImage()->getImageMat(), ImageAlgorithmView::HSV, 0);
+}
+
+void ImageSimilarityView::on_ac_Calculate_triggered()
+{
+
+}
+
+void ImageSimilarityView::on_ac_Sub_Normal_CHist_triggered()
+{
+    if(imageLoad())
+    {
+        if (m_SubHistogramFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("Sub Normalized Color Histogram Images Similarity Is Complete !")));
+            return;
+        }
+
+        QtConcurrent::run([=](){    m_ImageAlgorithm->SubNormalizedColorHistogram(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_SubHistogramFlag = true;
+        });
+    }
+}
+
+void ImageSimilarityView::on_ac_SIFT_triggered()
+{
+    if(imageLoad())
+    {
+        if (m_SIFTFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("SIFT Images Similarity Is Complete !")));
+            return;
+        }
+
+        QtConcurrent::run([=](){    m_ImageAlgorithm->SIFT(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_SIFTFlag = true;
+        });
+    }
+}
+
+void ImageSimilarityView::on_ac_aHash_triggered()
+{
+    if(imageLoad())
+    {
+        if (m_aHashFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("aHash Images Similarity Is Complete !")));
+            return;
+        }
+
+        QtConcurrent::run([=](){    m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eAHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_aHashFlag = true;
+        });
+    }
+}
+
+void ImageSimilarityView::on_ac_pHash_triggered()
+{
+    if(imageLoad())
+    {
+        if (m_pHashFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("aHash Images Similarity Is Complete !")));
+            return;
+        }
+
+        QtConcurrent::run([=](){    m_ImageAlgorithm-> HASH(m_ImageAlgorithm->ePHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_pHashFlag = true;
+        });
+    }
+}
+
+void ImageSimilarityView::on_ac_dHash_triggered()
+{
+    if(imageLoad())
+    {
+        if (m_dHashFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("aHash Images Similarity Is Complete !")));
+            return;
+        }
+
+        QtConcurrent::run([=](){    m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eDHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_dHashFlag = true;
+        });
+    }
 }

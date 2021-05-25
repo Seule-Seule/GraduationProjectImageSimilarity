@@ -129,7 +129,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -150,24 +150,22 @@
      </property>
      <addaction name="ac_Histogram"/>
      <addaction name="ac_HistogramSub"/>
+     <addaction name="ac_Sub_Normal_CHist"/>
      <addaction name="ac_Left_Histogram"/>
      <addaction name="ac_Right_Histogram"/>
-    </widget>
-    <widget class="QMenu" name="menu_SIFT">
-     <property name="title">
-      <string>SIFT</string>
-     </property>
-     <addaction name="ac_Test"/>
     </widget>
     <widget class="QMenu" name="menu_HASH">
      <property name="title">
       <string>HASH</string>
      </property>
-     <addaction name="ac_Test2"/>
+     <addaction name="ac_aHash"/>
+     <addaction name="ac_pHash"/>
+     <addaction name="ac_dHash"/>
     </widget>
     <addaction name="menu_Histogram"/>
-    <addaction name="menu_SIFT"/>
     <addaction name="menu_HASH"/>
+    <addaction name="ac_SIFT"/>
+    <addaction name="ac_Calculate"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -207,8 +205,7 @@
    </attribute>
    <addaction name="ac_Save"/>
    <addaction name="separator"/>
-   <addaction name="ac_Histogram"/>
-   <addaction name="ac_HistogramSub"/>
+   <addaction name="ac_Calculate"/>
    <addaction name="separator"/>
    <addaction name="ac_About"/>
    <addaction name="ac_Exit"/>
@@ -223,7 +220,7 @@
   </action>
   <action name="ac_Histogram">
    <property name="text">
-    <string>Histogram Equalization</string>
+    <string>Color Histogram</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+H</string>
@@ -231,7 +228,7 @@
   </action>
   <action name="ac_HistogramSub">
    <property name="text">
-    <string>Aptive Histogram Equalization</string>
+    <string>Normalized Color Histogram</string>
    </property>
   </action>
   <action name="ac_Test">
@@ -239,9 +236,9 @@
     <string>test</string>
    </property>
   </action>
-  <action name="ac_Test2">
+  <action name="ac_aHash">
    <property name="text">
-    <string>test2</string>
+    <string>aHash</string>
    </property>
   </action>
   <action name="ac_Exit">
@@ -270,6 +267,34 @@
   <action name="ac_Right_Histogram">
    <property name="text">
     <string>Show Right Histogram</string>
+   </property>
+  </action>
+  <action name="ac_Calculate">
+   <property name="text">
+    <string>Calculate</string>
+   </property>
+   <property name="toolTip">
+    <string>Automatic calculation of similarity</string>
+   </property>
+  </action>
+  <action name="ac_Sub_Normal_CHist">
+   <property name="text">
+    <string>Sub Normalized Color Histogram</string>
+   </property>
+  </action>
+  <action name="ac_SIFT">
+   <property name="text">
+    <string>SIFT</string>
+   </property>
+  </action>
+  <action name="ac_pHash">
+   <property name="text">
+    <string>pHash</string>
+   </property>
+  </action>
+  <action name="ac_dHash">
+   <property name="text">
+    <string>dHash</string>
    </property>
   </action>
  </widget>

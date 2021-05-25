@@ -3,18 +3,6 @@
 
 #include "imageprocess.hpp"
 
-#include "opencv2/opencv.hpp"
-#include<opencv2/imgproc/imgproc_c.h>
-#include <opencv2/highgui/highgui_c.h>
-
-using namespace cv;
-using namespace std;
-
-#include <QDebug>
-
-#include <io.h>
-#include <direct.h>
-#include <fstream>
 
 //剪切图片为m * n 块
 void splitMat(Mat &srcImg,int m,int n,vector<Mat> &ceilImg){
@@ -34,10 +22,10 @@ void splitMat(Mat &srcImg,int m,int n,vector<Mat> &ceilImg){
     }
 }
 
-double colorHistSubEqualization(Mat &leftImage, Mat &rightImage, string leftSavePath, string rightSavePath, size_t scale = 3/*3x3*/)
+double colorHistSubEqualization(Mat &leftImage, Mat &rightImage, string leftSavePath, string rightSavePath, size_t scale )
 {
     if (leftImage.empty() || rightImage.empty() || leftSavePath.empty() || rightSavePath.empty()){
-        qDebug() << "colorHistSubEqualization input error！";
+        qDebug() << "colorHistSubEqualization input error!";
         return -1;
     }
     size_t subImageNumber = scale*scale;
@@ -55,7 +43,7 @@ double colorHistSubEqualization(Mat &leftImage, Mat &rightImage, string leftSave
     string leftSubSavePath;
     for (size_t index =0; index < subImageNumber; index++)
     {
-        leftSubSavePath = (splitString(leftSavePath, ".")[0] + string("_sub") +to_string(index) + string(".jpg"));
+        leftSubSavePath = (splitString(leftSavePath, ".")[0] + string("_subHist") +to_string(index) + string(".jpg"));
         rightSubSavePath = (splitString(rightSavePath, ".")[0] + string("_sub") + to_string(index) + string(".jpg"));
         subImageResult.push_back(ColorHistEqualization(leftImageCeil[index], rightImageCeil[index],leftSubSavePath, rightSubSavePath));
 

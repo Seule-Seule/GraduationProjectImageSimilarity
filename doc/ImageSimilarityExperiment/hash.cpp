@@ -2,13 +2,6 @@
 
 #include <QDebug>
 
-#include "opencv2/opencv.hpp"
-#include<opencv2/imgproc/imgproc_c.h>
-#include <opencv2/highgui/highgui_c.h>
-
-using namespace cv;
-using namespace std;
-
 
 //汉明距离计算
 int HanmingDistance(string &str1, string &str2)
@@ -155,12 +148,12 @@ string dHashValue(Mat src)
 
 enum HashType
 {
-    AHASH,
-    PHASH,
-    DHASH
+    eAHASH,
+    ePHASH,
+    eDHASH
 };
 
-int Hash(HashType type, Mat &leftImage, Mat &rightImage, string *leftSavePath=nullptr, string *rightSavePath=nullptr)
+double Hash(HashType type, Mat &leftImage, Mat &rightImage, string *leftSavePath=nullptr, string *rightSavePath=nullptr, int hanmingDistance = 0)
 {
     if (leftImage.empty() || rightImage.empty()){
         qDebug() << ("aHash image not load !");
@@ -171,15 +164,15 @@ int Hash(HashType type, Mat &leftImage, Mat &rightImage, string *leftSavePath=nu
 
     switch(type)
     {
-    case HashType::AHASH:
+    case HashType::eAHASH:
         leftStr = aHashValue(leftImage);
         rightStr = aHashValue(rightImage);
         break;
-    case HashType::PHASH:
+    case HashType::ePHASH:
         leftStr = pHashValue(leftImage);
         rightStr = pHashValue(rightImage);
         break;
-    case HashType::DHASH:
+    case HashType::eDHASH:
         leftStr = dHashValue(leftImage);
         rightStr = dHashValue(rightImage);
         break;
@@ -192,25 +185,27 @@ int Hash(HashType type, Mat &leftImage, Mat &rightImage, string *leftSavePath=nu
     if (rightSavePath != nullptr )
         *rightSavePath = rightStr;
 
-    return HanmingDistance(leftStr, rightStr);
+    hanmingDistance = HanmingDistance(leftStr, rightStr);
+
+    qDebug() << "HanmingDistance:" << hanmingDistance;
+
+    // 结果归一化
+    return (1.0-hanmingDistance/64.0);
 }
 
-void test()
+void hashTest(Mat& src1, Mat& src2)
 {
-    Mat src1 = imread("Z:/testImages/images/240x320/2019-07-17_Narrenmuehle_ZH-CN5582540867_240x320.jpg");
-    Mat src2 = imread("Z:/testImages/images/320x240/2019-07-17_Narrenmuehle_ZH-CN5582540867_320x240.jpg");
-
     string sr1;
     string sr2;
-    qDebug() << "1->" << Hash(HashType::AHASH, src1, src2, &sr1, &sr2);
+    qDebug() << "aHash->" << Hash(HashType::eAHASH, src1, src2, &sr1, &sr2);
     qDebug() << sr1.c_str();
     qDebug() << sr2.c_str();
 
-    qDebug() << "2->" << Hash(HashType::PHASH, src1, src2, &sr1, &sr2);
+    qDebug() << "pHash->" << Hash(HashType::ePHASH, src1, src2, &sr1, &sr2);
     qDebug() << sr1.c_str();
     qDebug() << sr2.c_str();
 
-    qDebug() << "3->" << Hash(HashType::DHASH, src1, src2, &sr1, &sr2);
+    qDebug() << "dHash->" << Hash(HashType::eDHASH, src1, src2, &sr1, &sr2);
     qDebug() << sr1.c_str();
     qDebug() << sr2.c_str();
 }
