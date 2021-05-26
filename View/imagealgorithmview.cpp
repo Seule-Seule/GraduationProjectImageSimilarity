@@ -202,6 +202,9 @@ double ImageAlgorithmView::SubNormalizedColorHistogram(const Mat &leftImageIn,co
         resultSum = subImageResult[index]+resultSum;
     }
 
+    if(subImageNumber == 0){
+        return -1;
+    }
     double result = resultSum / subImageNumber;
     if(sengMessage)
     {
@@ -215,8 +218,12 @@ double ImageAlgorithmView::SubNormalizedColorHistogram(const Mat &leftImageIn,co
 }
 
 //剪切图片为m * n 块
-void ImageAlgorithmView::splitMat(const Mat &srcIn,int m,int n, QVector<Mat> &ceilImg){
-
+void ImageAlgorithmView::splitMat(const Mat &srcIn,int m,int n, QVector<Mat> &ceilImg)
+{
+    if(m == 0 || n ==0)
+    {
+        return;
+    }
     Mat srcImg;
     srcIn.copyTo(srcImg);
     int ceilHeight = (srcImg.rows-m)/m;
@@ -298,6 +305,9 @@ double ImageAlgorithmView::SIFT(const Mat &leftImageIn, const Mat &rightImageIn,
             result = 1.0;
         }
 
+        if(maxDistance == 0){
+            maxDistance = 0.0001;
+        }
         result = 1-meanRateDistance/maxDistance;
     }
     if(sengMessage)

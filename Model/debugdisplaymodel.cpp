@@ -24,6 +24,10 @@ DebugDisplayModel::DebugDisplayModel(QObject *parent)
 void DebugDisplayModel::updataDebugDisplay()
 {
         qSqlQueryModel-> setQuery( QString( "select ") + Tool::getDatabaseDebugTableShowKay() + QString(" from debug"),*BaseModel::getDatabase());
+        if(qSqlQueryModel->lastError().isValid())
+        {
+            return ;
+        }
     emit(valueChange());
 }
 
@@ -60,6 +64,7 @@ void DebugDisplayModel::debugMessage(const QString message)
                           "values('"+projectId+"','"+className+"','"+currentTime+"','"+debugMessage+"')")){
         #ifdef DEBUG
                 qDebug() << "DebugDisplayModel::debugMessage " << m_sqlQuery->lastError().text();
+                qDebug() << currentTime << className << debugMessage;
         #endif
     }
     #ifdef DEBUG

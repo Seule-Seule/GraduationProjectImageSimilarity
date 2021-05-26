@@ -159,10 +159,8 @@ void ImageSimilarityView::on_ac_Histogram_triggered()
             return;
         }
 
-        auto f = QtConcurrent::run([=](){
             m_ImageAlgorithm->ColorHistogram(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_HistogramFlag = true;
-        });
     }
 }
 
@@ -175,10 +173,8 @@ void ImageSimilarityView::on_ac_HistogramSub_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){m_ImageAlgorithm->NormalizedColorHistogram(
-                m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+        m_ImageAlgorithm->NormalizedColorHistogram(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_NormalHistogramFlag = true;
-        });
     }
 }
 
@@ -237,7 +233,7 @@ void ImageSimilarityView::on_ac_Calculate_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){
+    QtConcurrent::run([=](){
             m_ImageAlgorithm-> Calculate(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_CalculateFlag = true;
         });
@@ -253,9 +249,8 @@ void ImageSimilarityView::on_ac_Sub_Normal_CHist_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){    m_ImageAlgorithm->SubNormalizedColorHistogram(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
-            m_SubHistogramFlag = true;
-        });
+        m_ImageAlgorithm->SubNormalizedColorHistogram(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+        m_SubHistogramFlag = true;
     }
 }
 
@@ -268,7 +263,8 @@ void ImageSimilarityView::on_ac_SIFT_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){    m_ImageAlgorithm->SIFT(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+    QtConcurrent::run([=](){
+        m_ImageAlgorithm->SIFT(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_SIFTFlag = true;
         });
     }
@@ -283,9 +279,9 @@ void ImageSimilarityView::on_ac_aHash_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){    m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eAHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
-            m_aHashFlag = true;
-        });
+        m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eAHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+        m_aHashFlag = true;
+
     }
 }
 
@@ -298,8 +294,8 @@ void ImageSimilarityView::on_ac_pHash_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){
-            m_ImageAlgorithm->HASH(m_ImageAlgorithm->ePHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+    QtConcurrent::run([=](){
+        m_ImageAlgorithm->HASH(m_ImageAlgorithm->ePHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_pHashFlag = true;
         });
     }
@@ -314,9 +310,7 @@ void ImageSimilarityView::on_ac_dHash_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){
             m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eDHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_dHashFlag = true;
-        });
     }
 }
