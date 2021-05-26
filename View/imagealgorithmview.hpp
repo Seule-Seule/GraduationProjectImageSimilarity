@@ -50,13 +50,16 @@ public:
     void CompImageHist(const Mat &src_in,WorkSpace ws, int id);
     void ColorHistogram(const Mat &leftImage,const Mat &rightImage);
     double NormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, bool sengMessage = true);
-    void SubNormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, int scale = 3);
+    double SubNormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, int scale = 3, bool sengMessage = true);
 
     // 哈希算法
-    double HASH(HashType type, const Mat &leftImage, const Mat &rightImage);
+    double HASH(HashType type, const Mat &leftImage, const Mat &rightImage, bool sengMessage = true);
 
-    // sift
-    double SIFT(const Mat &leftImage, const Mat &rightImage);
+    // SIFt
+    double SIFT(const Mat &leftImage, const Mat &rightImage, bool sengMessage = true);
+
+    // 多级分辨率计算
+    double Calculate(const Mat &leftImage, const Mat &rightImage, bool sengMessage = true);
 
 };
 

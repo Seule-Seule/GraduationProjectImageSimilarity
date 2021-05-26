@@ -33,12 +33,15 @@ void ImageAlgorithmView::DrawHist(String window_name, int width, int height, QVe
     debugMessage(QString(window_name.c_str()) + QString(" histogram draw ok !"));
 }
 
-void ImageAlgorithmView::CompImageHist(const Mat &src_in,WorkSpace ws, int id)
+void ImageAlgorithmView::CompImageHist(const Mat &srcIn,WorkSpace ws, int id)
 {
-    if (src_in.empty()){
+    if (srcIn.empty()){
         debugMessage("CompImageHist src_in is empty !");
         return;
     }
+
+    Mat src_in;
+    srcIn.copyTo(src_in);
     String position;
     if (id){
         position = String("Left ");
@@ -98,9 +101,13 @@ void ImageAlgorithmView::CompImageHist(const Mat &src_in,WorkSpace ws, int id)
     }
 }
 
-void ImageAlgorithmView::ColorHistogram(const Mat &leftImage,const Mat &rightImage)
+void ImageAlgorithmView::ColorHistogram(const Mat &leftImageIn,const Mat &rightImageIn)
 {
     debugMessage("ColorHistogram begin !");
+
+    Mat leftImage, rightImage;
+    leftImageIn.copyTo(leftImage);
+    rightImageIn.copyTo(rightImage);
 
     Mat leftSrc, rightSrc;
     cvtColor(leftImage, leftSrc, CV_RGB2HSV);
@@ -126,12 +133,16 @@ void ImageAlgorithmView::ColorHistogram(const Mat &leftImage,const Mat &rightIma
     debugMessage("ColorHistogram end !");
 }
 
-double ImageAlgorithmView::NormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, bool sengMessage)
+double ImageAlgorithmView::NormalizedColorHistogram(const Mat &leftImageIn,const Mat &rightImageIn, bool sengMessage)
 {
     if(sengMessage)
     {
         debugMessage("NormalizedColorHistogram begin !");
     }
+
+    Mat leftImage, rightImage;
+    leftImageIn.copyTo(leftImage);
+    rightImageIn.copyTo(rightImage);
 
     Mat leftSrc, rightSrc;
     cvtColor(leftImage, leftSrc, CV_RGB2HSV);
@@ -166,9 +177,13 @@ double ImageAlgorithmView::NormalizedColorHistogram(const Mat &leftImage,const M
     return result;
 }
 
-void ImageAlgorithmView::SubNormalizedColorHistogram(const Mat &leftImage,const Mat &rightImage, int scale)
+double ImageAlgorithmView::SubNormalizedColorHistogram(const Mat &leftImageIn,const Mat &rightImageIn, int scale, bool sengMessage)
 {
     debugMessage("SubNormalizedColorHistogram begin !");
+
+    Mat leftImage, rightImage;
+    leftImageIn.copyTo(leftImage);
+    rightImageIn.copyTo(rightImage);
 
     size_t subImageNumber = scale*scale;
     QVector<double> subImageResult;
@@ -188,13 +203,22 @@ void ImageAlgorithmView::SubNormalizedColorHistogram(const Mat &leftImage,const 
     }
 
     double result = resultSum / subImageNumber;
-    QString messageCorrel = QString(QString("SubNormalizedColorHistogram Images Similarity::") + QString::number(result));
-    detectMessage(messageCorrel);
+    if(sengMessage)
+    {
+        QString messageCorrel = QString(QString("SubNormalizedColorHistogram Images Similarity::") + QString::number(result));
+        detectMessage(messageCorrel);
+    }
+
     debugMessage("SubNormalizedColorHistogram end !");
+
+    return result;
 }
 
 //剪切图片为m * n 块
-void ImageAlgorithmView::splitMat(const Mat &srcImg,int m,int n, QVector<Mat> &ceilImg){
+void ImageAlgorithmView::splitMat(const Mat &srcIn,int m,int n, QVector<Mat> &ceilImg){
+
+    Mat srcImg;
+    srcIn.copyTo(srcImg);
     int ceilHeight = (srcImg.rows-m)/m;
     int ceilWidth  = (srcImg.cols-n)/n;
     Mat roiImg;
@@ -210,9 +234,13 @@ void ImageAlgorithmView::splitMat(const Mat &srcImg,int m,int n, QVector<Mat> &c
     }
 }
 
-double ImageAlgorithmView::SIFT(const Mat &leftImage, const Mat &rightImage)
+double ImageAlgorithmView::SIFT(const Mat &leftImageIn, const Mat &rightImageIn, bool sengMessage)
 {
     debugMessage("SIFT begin !");
+
+    Mat leftImage, rightImage;
+    leftImageIn.copyTo(leftImage);
+    rightImageIn.copyTo(rightImage);
 
     float Rate = 0.3;
     Mat imageL;
@@ -272,18 +300,26 @@ double ImageAlgorithmView::SIFT(const Mat &leftImage, const Mat &rightImage)
 
         result = 1-meanRateDistance/maxDistance;
     }
+    if(sengMessage)
+    {
+        QString messageCorrel = QString(QString("SIFT Images Similarity::") + QString::number(result));
+        detectMessage(messageCorrel);
+    }
 
-    QString messageCorrel = QString(QString("SIFT Images Similarity::") + QString::number(result));
-    detectMessage(messageCorrel);
     debugMessage("SIFT end !");
-
     return result;
 }
 
-double ImageAlgorithmView::HASH(HashType type, const Mat &leftImage, const Mat &rightImage)
+double ImageAlgorithmView::HASH(HashType type, const Mat &leftImageIn, const Mat &rightImageIn, bool sengMessage)
 {
     debugMessage("HASH begin !");
     QString leftStr, rightStr, strNotice;
+
+
+    Mat leftImage, rightImage;
+    leftImageIn.copyTo(leftImage);
+    rightImageIn.copyTo(rightImage);
+
 
     switch(type)
     {
@@ -310,8 +346,12 @@ double ImageAlgorithmView::HASH(HashType type, const Mat &leftImage, const Mat &
     int hanmingDistance = HanmingDistance(leftStr, rightStr);
     double result = 1.0-hanmingDistance/64.0;
 
-    QString messageCorrel = QString(strNotice + QString(" Images Similarity::") + QString::number(result));
-    detectMessage(messageCorrel);
+    if(sengMessage)
+    {
+        QString messageCorrel = QString(strNotice + QString(" Images Similarity::") + QString::number(result));
+        detectMessage(messageCorrel);
+    }
+
     debugMessage("HASH end !");
 
     return result;
@@ -332,8 +372,10 @@ int ImageAlgorithmView::HanmingDistance(QString &str1, QString &str2)
 }
 
 //均值aHash算法
-QString ImageAlgorithmView::aHashValue(const Mat &src)
+QString ImageAlgorithmView::aHashValue(const Mat &srcIn)
 {
+    Mat src;
+    srcIn.copyTo(src);
     QString rst(64,'\0');
     Mat img;
     if(src.channels()==3)
@@ -378,8 +420,10 @@ QString ImageAlgorithmView::aHashValue(const Mat &src)
 }
 
 //pHash 感知算法
-QString ImageAlgorithmView::pHashValue(const Mat &src)
+QString ImageAlgorithmView::pHashValue(const Mat &srcIn)
 {
+    Mat src;
+    srcIn.copyTo(src);
     Mat img,  dst;
     QString rst(64,'\0');
     double dIdex[64];
@@ -425,11 +469,13 @@ QString ImageAlgorithmView::pHashValue(const Mat &src)
 }
 
 //dHash 差异值哈希算法
-QString ImageAlgorithmView::dHashValue(const Mat& src)
+QString ImageAlgorithmView::dHashValue(const Mat& srcIn)
 {
+    Mat src;
+    srcIn.copyTo(src);
+
     Mat img ;
     QString dhash(64,'\0');
-
 
     // 图片进行灰度化
     if(src.channels()==3){
@@ -454,6 +500,93 @@ QString ImageAlgorithmView::dHashValue(const Mat& src)
 
     return dhash;
 }
+
+
+double ImageAlgorithmView::Calculate(const Mat &leftImageIn, const Mat &rightImageIn, bool sengMessage)
+{
+    debugMessage("Calculate begin !");
+
+    Mat leftImage, rightImage;
+    leftImageIn.copyTo(leftImage);
+    rightImageIn.copyTo(rightImage);
+
+    // 获取两张图片分辨率 使用图像长宽比中较大的一边
+    int leftSizt = (leftImage.rows > leftImage.cols) ? leftImage.rows : leftImage.cols;
+    int rightSizt =  (rightImage.rows > rightImage.cols) ? rightImage.rows : rightImage.cols;
+
+    // 分辨率分析 算法调用
+    double result = 0.0;
+    bool bChooseAl = false;
+    QVector<float>  vecAlph;
+    if(leftSizt == rightSizt && !bChooseAl)
+    {
+        // 所有算法平均值
+        vecAlph.push_back(0.333);
+        vecAlph.push_back(0.333);
+        vecAlph.push_back(0.333);
+        bChooseAl = true;
+    }
+    // 10%
+    else if((leftSizt*0.1 <= rightSizt || rightSizt*0.1 <= leftSizt)&& !bChooseAl)
+    {
+        // SIFT 40%  hist 30% hash 30%
+        vecAlph.push_back(0.4);
+        vecAlph.push_back(0.3);
+        vecAlph.push_back(0.3);
+        bChooseAl = true;
+    }
+    // 30%
+    else if((leftSizt*0.3 <= rightSizt || rightSizt*0.3 <= leftSizt)&& !bChooseAl)
+    {
+        // SIFT 50%  hist 30% hash 20%
+        vecAlph.push_back(0.5);
+        vecAlph.push_back(0.3);
+        vecAlph.push_back(0.2);
+        bChooseAl = true;
+    }
+    // 50%
+    else if((leftSizt*0.5 <= rightSizt || rightSizt*0.5 <= leftSizt)&& !bChooseAl)
+    {
+        // SIFT 60%  hist 20% hash 20%
+        vecAlph.push_back(0.6);
+        vecAlph.push_back(0.2);
+        vecAlph.push_back(0.2);
+        bChooseAl = true;
+    }
+    // 差异超过50%
+    else
+    {
+        // SIFT 70%  hist 15% hash 15%
+        vecAlph.push_back(0.7);
+        vecAlph.push_back(0.15);
+        vecAlph.push_back(0.15);
+        bChooseAl = true;
+    }
+
+    // 计算分级相似性
+    QVector<double> vecResultTemp;
+    if(bChooseAl)
+    {
+        vecResultTemp.push_back(SIFT(leftImage, rightImage, false));
+        vecResultTemp.push_back(SubNormalizedColorHistogram(leftImage, rightImage, 4, false));
+        vecResultTemp.push_back(HASH(HashType::ePHASH, leftImage, rightImage, false));
+    }
+
+    if(vecResultTemp.size() == 3 && vecAlph.size() == 3)
+    {
+        result = vecResultTemp[0] * vecAlph[0]+vecResultTemp[1] * vecAlph[1] + vecResultTemp[2] * vecAlph[2];
+    }
+
+    if(sengMessage)
+    {
+        QString messageCorrel = QString(QString("Calculate Images Similarity::") + QString::number(result));
+        detectMessage(messageCorrel);
+    }
+
+    debugMessage("Calculate end !");
+    return result;
+}
+
 
 void ImageAlgorithmView::update()
 {

@@ -73,6 +73,8 @@ private:
     PropertyBuilderByName(bool, pHashFlag, private);
     PropertyBuilderByName(bool, dHashFlag, private);
 
+    PropertyBuilderByName(bool, CalculateFlag, private);
+
     PointerPropertyBuilderByName(ImageShowView, leftImage, private);
     PointerPropertyBuilderByName(ImageShowView, rightImage, private);
     PointerPropertyBuilderByName(MessageBoxView, MessageView, private);

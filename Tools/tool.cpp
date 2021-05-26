@@ -53,20 +53,17 @@ QString Tool::getDatabaseDebugTableKay()
 
 QString Tool::getDatabaseDebugTableShowKay()
 {
-    return QString("time, className, message");
+    return QString("time,className,message");
 }
 
 QString Tool::getDatabaseDetectTableKay()
 {
-    return QString("string_id,   \
-                   date,time,message,value, \
-                   left_image_path,left_image_name, \
-                   right_image_path,right_image_name");
+    return QString("string_id,date,time,message,value,left_image_path,left_image_name,right_image_path,right_image_name");
 }
 
 QString Tool::getDatabaseDetectTableShowKay()
 {
-    return QString("time, message, value");
+    return QString("time,message,value");
 }
 
 

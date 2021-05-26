@@ -15,6 +15,7 @@ private:
     bool initFlag;
     static QSqlDatabase *m_dataBase;
     static QSqlQuery        *m_sqlQuery;
+    static bool bFirstInit;
 };
 
 #endif // BASEMODEL_HPP

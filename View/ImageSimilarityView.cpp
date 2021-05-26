@@ -121,6 +121,7 @@ void ImageSimilarityView::update()
     m_aHashFlag = false;
     m_pHashFlag = false;
     m_dHashFlag = false;
+    m_CalculateFlag = false;
 
     emit(projectIdSig(ProjectId));
 }
@@ -229,7 +230,18 @@ void ImageSimilarityView::on_ac_Right_Histogram_triggered()
 
 void ImageSimilarityView::on_ac_Calculate_triggered()
 {
+    if(imageLoad())
+    {
+        if (m_CalculateFlag){
+            QMessageBox::information(this, QString::fromLocal8Bit("Notice"),QString(tr("aHash Images Similarity Is Complete !")));
+            return;
+        }
 
+        QtConcurrent::run([=](){
+            m_ImageAlgorithm-> Calculate(m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+            m_CalculateFlag = true;
+        });
+    }
 }
 
 void ImageSimilarityView::on_ac_Sub_Normal_CHist_triggered()
@@ -286,7 +298,8 @@ void ImageSimilarityView::on_ac_pHash_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){    m_ImageAlgorithm-> HASH(m_ImageAlgorithm->ePHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+        QtConcurrent::run([=](){
+            m_ImageAlgorithm->HASH(m_ImageAlgorithm->ePHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_pHashFlag = true;
         });
     }
@@ -301,7 +314,8 @@ void ImageSimilarityView::on_ac_dHash_triggered()
             return;
         }
 
-        QtConcurrent::run([=](){    m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eDHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
+        QtConcurrent::run([=](){
+            m_ImageAlgorithm-> HASH(m_ImageAlgorithm->eDHASH, m_leftImage->getImage()->getImageMat(), m_rightImage->getImage()->getImageMat());
             m_dHashFlag = true;
         });
     }

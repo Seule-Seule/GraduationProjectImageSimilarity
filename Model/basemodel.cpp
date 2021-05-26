@@ -5,12 +5,27 @@
 #include <QSqlError>
 #include <QtDebug>
 
+#include <io.h>
+#include <direct.h>
+#include <fstream>
+
 QSqlDatabase *BaseModel::m_dataBase = nullptr;
 QSqlQuery *BaseModel::m_sqlQuery = nullptr;
+bool BaseModel::bFirstInit = false;
 
 BaseModel::BaseModel()
 {
     m_sqlQuery = nullptr;
+    m_dataBase = nullptr;
+
+    if(!bFirstInit)
+    {
+        if (_access(Tool::getDatabaseName().toStdString().c_str(), 0) == 0)
+        {
+            remove(Tool::getDatabaseName().toStdString().c_str());
+        }
+        bFirstInit = true;
+    }
 }
 
 QSqlDatabase *BaseModel::getDatabase()
